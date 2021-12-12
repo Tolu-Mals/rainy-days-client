@@ -4,13 +4,18 @@ import TextField from "@mui/material/TextField";
 
 export const FormContainer = styled(Grid)`
   && {
-    text-align: center;
 
-    .signup-title {
-      margin-bottom: 2rem;
-    }
+    text-align: left;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    
+    @media screen and (max-width: 900px) {
+      text-align: center;
 
-    @media screen and (max-width: 768px) {
+      #signup-title {
+        margin-bottom: 2rem;
+      }
       .MuiGrid-container {
         justify-content: center;
       }
