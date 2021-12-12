@@ -20,11 +20,21 @@ export const SignUpContainer = styled(Grid)`
       margin: auto;
     }
 
+    .tasks {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     @media screen and (max-width: 900px) {
       padding: 1rem;
 
       #signup-form {
         width: 100%;
+      }
+
+      .tasks {
+        display: block;
       }
     }
   }

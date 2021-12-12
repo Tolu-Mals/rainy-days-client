@@ -1,6 +1,8 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import SignUp from "./Pages/SignUp";
+import SignIn from "./Pages/SignIn";
+import PasswordReset from "./Pages/PasswordReset";
 
 const theme = createTheme({
   typography: {
@@ -21,7 +23,9 @@ function App() {
     <div className="App">
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SignUp />
+        {/* <SignUp /> */}
+        {/* <SignIn /> */}
+        <PasswordReset />
       </ThemeProvider>
     </div>
   );
