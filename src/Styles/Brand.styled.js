@@ -3,6 +3,11 @@ import Grid from "@mui/material/Grid";
 
 export const StyledBrand = styled(Grid)`
   && {
+    #brand {
+      width: auto;
+      margin-left: auto;
+      margin-right: auto;
+    }
     @media screen and (max-width: 900px) {
       text-align: center;
       img {
@@ -21,7 +26,7 @@ export const StyledBrand = styled(Grid)`
 
 export const BrandPattern = styled(Grid)`
   && {
-    background: #0000a7 url('./assets/pattern.svg');
+    background: #0000a7 url(${props => props.bg});
     height: 100%;
     justify-content: center;
     align-items: center;  
@@ -31,6 +36,7 @@ export const BrandPattern = styled(Grid)`
       margin: auto;
       margin-top: 50%;
       margin-bottom: 50%;
+      width: auto;
     }
 
     @media screen and (max-width: 900px){

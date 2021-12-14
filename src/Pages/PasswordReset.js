@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { StyledBrand, BrandPattern } from "../Styles/Brand.styled";
@@ -14,7 +13,7 @@ const PasswordReset = () => {
     <div>
       <SignUpContainer container>
         <StyledBrand item xs={12}>
-          <img src="Assets/logo.svg" alt="Logo" />
+          <img src="Assets/logo.svg" alt="Logo" id="brand" />
         </StyledBrand>
         <BrandPattern item md={5}>
           <img src="./assets/logo_light.svg" alt="logo" id="pattern_logo" />

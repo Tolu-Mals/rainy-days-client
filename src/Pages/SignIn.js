@@ -1,23 +1,83 @@
-import React, { useState } from "react";
-import Grid from "@mui/material/Grid";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import LoadingButton from "@mui/lab/LoadingButton";
+
 import { StyledBrand, BrandPattern } from "../Styles/Brand.styled";
 import { FormContainer, StyledTextField } from "../Styles/FormContainer.styled";
 import { SignUpContainer } from "../Styles/SignUpPage.Styled";
+
+import { AuthContext } from "../Contexts/AuthContext";
+import { ErrorContext } from "../Contexts/ErrorContext";
+
+import logo from "../Assets/logo.svg";
+import logo_light from "../Assets/logo_light.svg";
+import pattern from "../Assets/pattern.svg";
+
+import axios from "axios";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { auth_state, auth_dispatch } = useContext(AuthContext);
+  const { err_state, err_dispatch } = useContext(ErrorContext);
+
+  const navigate = useNavigate();
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+
+    const user = {
+      email,
+      password,
+    };
+
+    loginUser(user);
+  };
+
+  const loginUser = ({ email, password }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const body = JSON.stringify({ email, password });
+
+    axios
+      .post("https://rainy-days-savers.herokuapp.com/api/auth", body, config)
+      .then((res) => {
+        auth_dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+        err_dispatch({ type: "CLEAR_ERRORS" });
+        navigate("/construction");
+      })
+      .catch((err) => {
+        auth_dispatch({ type: "LOGIN_FAIL" });
+        err_dispatch({
+          type: "GET_ERRORS",
+          payload: {
+            msg: err.response.data.msg,
+            status: err.response.status,
+            id: "LOGIN_FAIL",
+          },
+        });
+      });
+  };
+
   return (
     <div>
       <SignUpContainer container>
         <StyledBrand item xs={12}>
-          <img src="Assets/logo.svg" alt="Logo" />
+          <img src={logo} alt="Logo" id="brand" />
         </StyledBrand>
-        <BrandPattern item md={5}>
-          <img src="./assets/logo_light.svg" alt="logo" id="pattern_logo" />
+        <BrandPattern item md={5} bg={pattern}>
+          <img src={logo_light} alt="logo" id="pattern_logo" />
         </BrandPattern>
         <FormContainer item xs={12} md={7}>
           <form id="signup-form">
@@ -30,6 +90,16 @@ const SignIn = () => {
               Welcome, let's get
               <br /> right back in
             </Typography>
+            {err_state.msg && (
+              <Alert
+                severity="error"
+                sx={{
+                  marginBottom: "0.5rem",
+                }}
+              >
+                {err_state.msg}
+              </Alert>
+            )}
 
             <StyledTextField
               required
@@ -54,23 +124,43 @@ const SignIn = () => {
               className="input"
             />
 
-            <Button
-              variant="contained"
-              fullWidth
-              disableElevation
-              color="primary"
-              size="large"
-              sx={{
-                  marginBottom: '1rem'
-              }}
-            >
-              SIGN IN
-            </Button>
-            
+            {isLoading ? (
+              <LoadingButton
+                variant="contained"
+                fullWidth
+                disableElevation
+                loading
+                color="primary"
+                size="large"
+                sx={{
+                  marginBottom: "1rem",
+                }}
+                onClick={(e) => handleSignIn(e)}
+              >
+                SIGN IN
+              </LoadingButton>
+            ) : (
+              <LoadingButton
+                variant="contained"
+                fullWidth
+                disableElevation
+                color="primary"
+                size="large"
+                sx={{
+                  marginBottom: "1rem",
+                }}
+                onClick={(e) => handleSignIn(e)}
+              >
+                SIGN IN
+              </LoadingButton>
+            )}
+
             <div className="tasks">
-              <a href="#">Forgotten Password</a>
+              {/* <Link to="/forgot" alt="forgot password">
+                Forgotten Password
+              </Link> */}
               <p>
-                New here? <a href="#">Sign Up</a>
+                New here? <Link to="/signup">Sign Up</Link>
               </p>
             </div>
           </form>

@@ -3,3 +3,8 @@ a {
   color: #0000A7;
   font-weight: 600;
 }
+
+img {
+  display: block;
+  width: 100%;
+}
