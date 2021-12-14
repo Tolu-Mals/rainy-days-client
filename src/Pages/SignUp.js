@@ -1,4 +1,6 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
+
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -92,7 +94,9 @@ const SignUp = () => {
     <div>
       <SignUpContainer container>
         <StyledBrand item xs={12}>
-          <img src={logo} alt="Logo" id="brand" />
+          <Link to="/">
+            <img src={logo} alt="Logo" id="brand" />
+          </Link>
         </StyledBrand>
         <BrandPattern item md={5} bg={pattern}>
           <img src={logo_light} alt="logo" id="pattern_logo" />

@@ -42,6 +42,7 @@ const SignIn = () => {
   };
 
   const loginUser = ({ email, password }) => {
+    setIsLoading(true);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -53,11 +54,13 @@ const SignIn = () => {
     axios
       .post("https://rainy-days-savers.herokuapp.com/api/auth", body, config)
       .then((res) => {
+        setIsLoading(false);
         auth_dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
         err_dispatch({ type: "CLEAR_ERRORS" });
         navigate("/construction");
       })
       .catch((err) => {
+        setIsLoading(false);
         auth_dispatch({ type: "LOGIN_FAIL" });
         err_dispatch({
           type: "GET_ERRORS",
@@ -74,7 +77,9 @@ const SignIn = () => {
     <div>
       <SignUpContainer container>
         <StyledBrand item xs={12}>
-          <img src={logo} alt="Logo" id="brand" />
+          <Link to="/">
+            <img src={logo} alt="Logo" id="brand" />
+          </Link>
         </StyledBrand>
         <BrandPattern item md={5} bg={pattern}>
           <img src={logo_light} alt="logo" id="pattern_logo" />
@@ -140,7 +145,7 @@ const SignIn = () => {
                 SIGN IN
               </LoadingButton>
             ) : (
-              <LoadingButton
+              <Button
                 variant="contained"
                 fullWidth
                 disableElevation
@@ -152,7 +157,7 @@ const SignIn = () => {
                 onClick={(e) => handleSignIn(e)}
               >
                 SIGN IN
-              </LoadingButton>
+              </Button>
             )}
 
             <div className="tasks">
