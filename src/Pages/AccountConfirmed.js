@@ -2,17 +2,17 @@ import React from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import check from '../Assets/check.svg';
 
 import { StyledAccountConfirmation } from "../Styles/AccountConfirmed.Styled";
 
 const AccountConfirmed = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const handleLogin = () => {
-    navigate("/");
+    history.push("/");
   }
   
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -28,7 +28,7 @@ const SignIn = () => {
   const { auth_state, auth_dispatch } = useContext(AuthContext);
   const { err_state, err_dispatch } = useContext(ErrorContext);
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const handleSignIn = (e) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ const SignIn = () => {
         setIsLoading(false);
         auth_dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
         err_dispatch({ type: "CLEAR_ERRORS" });
-        navigate("/construction");
+        history.push("/construction");
       })
       .catch((err) => {
         setIsLoading(false);

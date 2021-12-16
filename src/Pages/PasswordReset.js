@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+
 import { StyledBrand, BrandPattern } from "../Styles/Brand.styled";
 import { FormContainer, StyledTextField } from "../Styles/FormContainer.styled";
 import { SignUpContainer } from "../Styles/SignUpPage.Styled";
+
+import logo from "../Assets/logo.svg";
+import logo_light from "../Assets/logo_light.svg";
+import pattern from "../Assets/pattern.svg";
 
 const PasswordReset = () => {
   const [email, setEmail] = useState("");
@@ -13,10 +18,10 @@ const PasswordReset = () => {
     <div>
       <SignUpContainer container>
         <StyledBrand item xs={12}>
-          <img src="Assets/logo.svg" alt="Logo" id="brand" />
+          <img src={logo} alt="Logo" id="brand" />
         </StyledBrand>
-        <BrandPattern item md={5}>
-          <img src="./assets/logo_light.svg" alt="logo" id="pattern_logo" />
+        <BrandPattern item md={5} bg={pattern}>
+          <img src={logo_light} alt="logo" id="pattern_logo" />
         </BrandPattern>
         <FormContainer item xs={12} md={7}>
           <form id="signup-form">

@@ -25,8 +25,8 @@ const AuthContextProvider = (props) => {
       .then((res) => auth_dispatch({ type: "USER_LOADED", payload: res.data }))
       .catch(err => {
           err_dispatch({ type: 'GET_ERRORS', payload: {
-              msg: err.response.data.msg,
-              status: err.response.status
+              msg: err?.response?.data?.msg,
+              status: err?.response?.status
           }})
           auth_dispatch({ type: 'AUTH_ERROR' })
       })

@@ -1,11 +1,13 @@
+import React, { useContext } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import SignUp from "./Pages/SignUp";
 import SignIn from "./Pages/SignIn";
 import PasswordReset from "./Pages/PasswordReset";
-import { Routes, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import AccountConfirmed from "./Pages/AccountConfirmed";
 import SiteConstruction from "./Pages/SiteConstruction";
+import { AuthContext } from "./Contexts/AuthContext";
 
 const theme = createTheme({
   typography: {
@@ -21,18 +23,43 @@ const theme = createTheme({
   },
 });
 
+const GuestRouter = () => (
+  <Switch>
+    <Route exact path="/">
+      <SignIn />
+    </Route>
+
+    <Route path="/signup">
+      <SignUp />
+    </Route>
+
+    <Route path="/forgot">
+      <PasswordReset />
+    </Route>
+
+    <Route path="/confirm">
+      <AccountConfirmed />
+    </Route>
+    
+  </Switch>
+);
+
+const AuthRouter = () => (
+  <Switch>
+    <Route path="/construction" component={<SiteConstruction />} />
+  </Switch>
+);
+
 function App() {
+  const { auth_state } = useContext(AuthContext);
+  const AppRoutes = () =>
+    auth_state.isAuthenticated ? <AuthRouter /> : <GuestRouter />;
+
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Routes>
-          <Route path="/" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/forgot" element={<PasswordReset />} />
-          <Route path="/confirm" element={<AccountConfirmed />} />
-          <Route path="/construction" element={<SiteConstruction />} />
-        </Routes>
+        <AppRoutes />
       </ThemeProvider>
     </div>
   );

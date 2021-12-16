@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { StyledAccountConfirmation } from "../Styles/AccountConfirmed.Styled";
 import { AuthContext } from "../Contexts/AuthContext";
@@ -9,7 +9,7 @@ import { AuthContext } from "../Contexts/AuthContext";
 import construction from '../Assets/construction.svg';
 
 const SiteConstruction = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const { auth_state, auth_dispatch } = useContext(AuthContext);
   
