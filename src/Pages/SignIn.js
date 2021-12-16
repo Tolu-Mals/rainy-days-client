@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -72,6 +72,12 @@ const SignIn = () => {
         });
       });
   };
+
+  useEffect(() => {
+    if(auth_state.isAuthenticated){
+      history.push("/construction");
+    }
+  }, [auth_state])
 
   return (
     <div>

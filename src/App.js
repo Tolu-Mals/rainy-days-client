@@ -9,6 +9,10 @@ import AccountConfirmed from "./Pages/AccountConfirmed";
 import SiteConstruction from "./Pages/SiteConstruction";
 import { AuthContext } from "./Contexts/AuthContext";
 
+import AuthContextProvider from "./Contexts/AuthContext";
+import ErrorContextProvider from "./Contexts/ErrorContext";
+import Routes from "./Helper/Routes";
+
 const theme = createTheme({
   typography: {
     fontFamily: ['"Hind Madurai"', "sans-serif"].join(","),
@@ -23,44 +27,18 @@ const theme = createTheme({
   },
 });
 
-const GuestRouter = () => (
-  <Switch>
-    <Route exact path="/">
-      <SignIn />
-    </Route>
-
-    <Route path="/signup">
-      <SignUp />
-    </Route>
-
-    <Route path="/forgot">
-      <PasswordReset />
-    </Route>
-
-    <Route path="/confirm">
-      <AccountConfirmed />
-    </Route>
-    
-  </Switch>
-);
-
-const AuthRouter = () => (
-  <Switch>
-    <Route path="/construction" component={<SiteConstruction />} />
-  </Switch>
-);
 
 function App() {
-  const { auth_state } = useContext(AuthContext);
-  const AppRoutes = () =>
-    auth_state.isAuthenticated ? <AuthRouter /> : <GuestRouter />;
-
   return (
     <div className="App">
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <AppRoutes />
-      </ThemeProvider>
+      <ErrorContextProvider>
+        <AuthContextProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Routes />
+          </ThemeProvider>
+        </AuthContextProvider>
+      </ErrorContextProvider>
     </div>
   );
 }
