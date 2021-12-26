@@ -71,7 +71,7 @@ const PasswordReset = () => {
 
     const body = JSON.stringify({ password });
 
-    axios.post(`https://rainy-days-savers.herokuapp.com/forgot/reset/${id}/${token}`, body, config)
+    axios.post(`https://rainy-days-savers.herokuapp.com/api/forgot/reset/${id}/${token}`, body, config)
     .then((res) => {
       setIsLoading(false);
       setIsPasswordReset(true);
