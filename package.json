@@ -1,5 +1,6 @@
 {
   "name": "rainy-days-client",
+  "homepage": "https://rainydayssavers.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

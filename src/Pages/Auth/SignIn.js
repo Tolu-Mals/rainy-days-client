@@ -6,23 +6,23 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import { StyledBrand, BrandPattern } from "../Styles/Brand.styled";
-import { FormContainer, StyledTextField } from "../Styles/FormContainer.styled";
-import { SignUpContainer } from "../Styles/SignUpPage.Styled";
+import { StyledBrand, BrandPattern } from "../../Styles/Brand.styled";
+import { FormContainer, StyledTextField } from "../../Styles/FormContainer.styled";
+import { SignUpContainer } from "../../Styles/SignUpPage.Styled";
 
-import { AuthContext } from "../Contexts/AuthContext";
-import { ErrorContext } from "../Contexts/ErrorContext";
+import { AuthContext } from "../../Contexts/AuthContext";
+import { ErrorContext } from "../../Contexts/ErrorContext";
 
-import logo from "../Assets/logo.svg";
-import logo_light from "../Assets/logo_light.svg";
-import pattern from "../Assets/pattern.svg";
+import logo from "../../Assets/logo.svg";
+import logo_light from "../../Assets/logo_light.svg";
+import pattern from "../../Assets/pattern.svg";
 
 import axios from "axios";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const { auth_state, auth_dispatch } = useContext(AuthContext);
@@ -32,6 +32,11 @@ const SignIn = () => {
 
   const handleSignIn = (e) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      setIsLoading(false);
+      return setError("Please enter all fields");
+    }
 
     const user = {
       email,
@@ -101,6 +106,18 @@ const SignIn = () => {
               Welcome, let's get
               <br /> right back in
             </Typography>
+
+            {error && (
+              <Alert
+                severity="error"
+                sx={{
+                  marginBottom: "1rem",
+                }}
+              >
+                {error}
+              </Alert>
+            )}
+
             {err_state.msg && (
               <Alert
                 severity="error"
@@ -167,9 +184,9 @@ const SignIn = () => {
             )}
 
             <div className="tasks">
-              {/* <Link to="/forgot" alt="forgot password">
-                Forgotten Password
-              </Link> */}
+              <Link to="/forgot" alt="forgot password">
+                Forgot Password
+              </Link>
               <p>
                 New here? <Link to="/signup">Sign Up</Link>
               </p>

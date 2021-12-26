@@ -1,94 +1,93 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useParams } from "react-router";
+
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Alert from "@mui/material/Alert";
 
-import { StyledBrand, BrandPattern } from "../Styles/Brand.styled";
-import { FormContainer, StyledTextField } from "../Styles/FormContainer.styled";
-import { SignUpContainer } from "../Styles/SignUpPage.Styled";
+import { StyledBrand, BrandPattern } from "../../Styles/Brand.styled";
+import { FormContainer, StyledTextField } from "../../Styles/FormContainer.styled";
+import { SignUpContainer } from "../../Styles/SignUpPage.Styled";
 
-import { ErrorContext } from "../Contexts/ErrorContext";
-import { AuthContext } from "../Contexts/AuthContext";
+import { ErrorContext } from "../../Contexts/ErrorContext";
+import { AuthContext } from "../../Contexts/AuthContext";
 
-import logo from "../Assets/logo.svg";
-import logo_light from "../Assets/logo_light.svg";
-import pattern from "../Assets/pattern.svg";
+import logo from "../../Assets/logo.svg";
+import logo_light from "../../Assets/logo_light.svg";
+import pattern from "../../Assets/pattern.svg";
 
 import axios from "axios";
 
-const SignUp = () => {
-  const [email, setEmail] = useState("");
+const PasswordReset = () => {
   const [password, setPassword] = useState("");
   const [confirmed_password, setConfirmedPassword] = useState("");
   const [error, setError] = useState("");
-  const [isMailSent, setIsMailSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordReset, setIsPasswordReset] = useState(false);
 
   const { err_state, err_dispatch } = useContext(ErrorContext);
   const { auth_state, auth_dispatch } = useContext(AuthContext);
 
-  const handleSignIn = (e) => {
+  const { id, token } = useParams();
+  const history = useHistory();
+
+  const handlePasswordReset = (e) => {
     e.preventDefault();
+
     setIsLoading(true);
 
-    if (password !== confirmed_password) {
-      return setError("Password is different from confirmed password");
-    }
 
-    if (!email || !password) {
+    if(!password || !confirmed_password){
+      setIsLoading(false);
       return setError("Please enter all fields");
     }
 
+    if (password !== confirmed_password) {
+      setIsLoading(false);
+      return setError("Password is different from confirmed password");
+    }
+
     if (!/^(?=.*?[A-Za-z0-9])(?=.*?[#?!@$%^&*-]).{6,}$/gm.test(password)) {
+      setIsLoading(false);
       return setError(
         "Password must be up to 6 characters and must contain one symbol"
       );
     }
 
-    const user = {
-      email,
-      password,
-    };
+    resetPassword();
 
-    signUp(user);
   };
 
-  const signUp = ({ email, password }) => {
+  const resetPassword = () => {
+
     const config = {
       headers: {
-        "Content-Type": "application/json",
-      },
-    };
+        "Content-Type": "application/json"
+      }
+    }
 
-    const body = JSON.stringify({ email, password });
+    const body = JSON.stringify({ password });
 
-    axios
-      .post("https://rainy-days-savers.herokuapp.com/api/users", body, config)
-      .then((res) => {
-        setError("");
-        setIsMailSent(true);
-        setEmail("");
-        setPassword("");
-        setConfirmedPassword("");
-        err_dispatch({ type: "CLEAR_ERRORS" });
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        auth_dispatch({ type: "REGISTER_FAIL" });
-        err_dispatch({
-          type: "GET_ERRORS",
-          payload: {
-            msg: err.response.data.msg,
-            status: err.response.status,
-            id: "REGISTER_FAIL",
-          },
-        });
-        setIsLoading(false);
-      });
-  };
+    axios.post(`https://rainy-days-savers.herokuapp.com/forgot/reset/${id}/${token}`, body, config)
+    .then((res) => {
+      setIsLoading(false);
+      setIsPasswordReset(true);
+      setError("");
+      setPassword("");
+      setConfirmedPassword("");
+      setTimeout(() => {
+        history.push("/");
+      }, 3000);
+    })
+    .catch((err) => {
+      setError(err.message)
+      setIsLoading(false);
+    })
+  }
+ 
 
   return (
     <div>
@@ -109,19 +108,20 @@ const SignUp = () => {
               component="h1"
               color="textPrimary"
             >
-              Let's create your
-              <br /> new account
+             Set a new password
             </Typography>
-            {isMailSent && (
+
+            {isPasswordReset && (
               <Alert
                 severity="success"
                 sx={{
                   marginBottom: "1rem",
                 }}
               >
-                Check email and spam folder for confirmation link
+                Password has been changed
               </Alert>
             )}
+           
             {error && (
               <Alert
                 severity="error"
@@ -142,17 +142,7 @@ const SignUp = () => {
                 {err_state.msg}
               </Alert>
             )}
-            <StyledTextField
-              required
-              fullWidth
-              id="email"
-              placeholder="Your Email"
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              variant="outlined"
-              className="input"
-            />
-
+        
             <StyledTextField
               required
               fullWidth
@@ -184,7 +174,7 @@ const SignUp = () => {
                 color="primary"
                 size="large"
                 loading
-                onClick={(e) => handleSignIn(e)}
+                onClick={(e) => handlePasswordReset(e)}
               >
                 CONTINUE
               </LoadingButton>
@@ -195,7 +185,7 @@ const SignUp = () => {
                 disableElevation
                 color="primary"
                 size="large"
-                onClick={(e) => handleSignIn(e)}
+                onClick={(e) => handlePasswordReset(e)}
               >
                 CONTINUE
               </Button>
@@ -207,4 +197,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default PasswordReset;

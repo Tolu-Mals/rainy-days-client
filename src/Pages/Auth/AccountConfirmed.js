@@ -4,9 +4,9 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useHistory } from "react-router-dom";
 
-import check from '../Assets/check.svg';
+import check from '../../Assets/check.svg';
 
-import { StyledAccountConfirmation } from "../Styles/AccountConfirmed.Styled";
+import { StyledAccountConfirmation } from "../../Styles/AccountConfirmed.Styled";
 
 const AccountConfirmed = () => {
   const history = useHistory();

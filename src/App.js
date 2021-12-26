@@ -1,17 +1,13 @@
 import React, { useContext } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import SignUp from "./Pages/SignUp";
-import SignIn from "./Pages/SignIn";
-import PasswordReset from "./Pages/PasswordReset";
-import { Switch, Route } from "react-router-dom";
-import AccountConfirmed from "./Pages/AccountConfirmed";
-import SiteConstruction from "./Pages/SiteConstruction";
-import { AuthContext } from "./Contexts/AuthContext";
+
 
 import AuthContextProvider from "./Contexts/AuthContext";
 import ErrorContextProvider from "./Contexts/ErrorContext";
 import Routes from "./Helper/Routes";
+
+import { BrowserRouter as Router } from "react-router-dom";
 
 const theme = createTheme({
   typography: {

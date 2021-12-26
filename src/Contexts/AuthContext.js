@@ -9,7 +9,7 @@ export const AuthContext = createContext();
 const AuthContextProvider = (props) => {
   const initialState = {
     token: localStorage.getItem('token'),
-    isAuthenticated: null,
+    isAuthenticated: false,
     isLoading: false,
     user: null,
   };
@@ -30,7 +30,7 @@ const AuthContextProvider = (props) => {
           //     msg: err.response.data.msg,
           //     status: err.response.status
           // }})
-          auth_dispatch({ type: 'AUTH_ERROR' })
+          // auth_dispatch({ type: 'AUTH_ERROR' })
       })
   }, []);
 

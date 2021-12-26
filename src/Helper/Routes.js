@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
-import SignUp from "../Pages/SignUp";
-import SignIn from "../Pages/SignIn";
-import PasswordReset from "../Pages/PasswordReset";
+import SignUp from "../Pages/Auth/SignUp";
+import SignIn from "../Pages/Auth/SignIn";
+import ForgotPassword from "../Pages/Auth/ForgotPassword";
+import PasswordReset from "../Pages/Auth/PasswordReset";
 import { Switch, Route } from "react-router-dom";
-import AccountConfirmed from "../Pages/AccountConfirmed";
+import AccountConfirmed from "../Pages/Auth/AccountConfirmed";
 import SiteConstruction from "../Pages/SiteConstruction";
 import { AuthContext } from "../Contexts/AuthContext";
 
@@ -20,13 +21,18 @@ const Routes = () => {
         <SignUp />
       </Route>
 
-      <Route path="/forgot">
+      <Route path="/forgot/:id/:token">
         <PasswordReset />
+      </Route>
+
+      <Route path="/forgot">
+        <ForgotPassword />
       </Route>
 
       <Route path="/confirm">
         <AccountConfirmed />
       </Route>
+
     </Switch>
   );
 
