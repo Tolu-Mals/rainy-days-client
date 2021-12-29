@@ -70,8 +70,8 @@ const SignIn = () => {
         err_dispatch({
           type: "GET_ERRORS",
           payload: {
-            msg: err.response.data.msg,
-            status: err.response.status,
+            msg: err?.response?.data?.msg,
+            status: err?.response?.status,
             id: "LOGIN_FAIL",
           },
         });

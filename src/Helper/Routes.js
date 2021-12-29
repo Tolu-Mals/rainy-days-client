@@ -6,6 +6,7 @@ import PasswordReset from "../Pages/Auth/PasswordReset";
 import { Switch, Route } from "react-router-dom";
 import AccountConfirmed from "../Pages/Auth/AccountConfirmed";
 import SiteConstruction from "../Pages/SiteConstruction";
+import Dashboard from "../Pages/Dashboard";
 import { AuthContext } from "../Contexts/AuthContext";
 
 const Routes = () => {
@@ -40,6 +41,9 @@ const Routes = () => {
     <Switch>
       <Route path="/construction">
         <SiteConstruction />
+      </Route>
+      <Route path="/dashboard">
+        <Dashboard />
       </Route>
     </Switch>
   );
