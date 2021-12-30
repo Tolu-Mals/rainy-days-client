@@ -9,7 +9,7 @@ export const Layout = styled.div`
           color: #000;
       }
 
-      @media screen and (min-width: 598px){
+      @media screen and (min-width: 900px){
           .appbar {
               width: calc(100% - 272px);
           }

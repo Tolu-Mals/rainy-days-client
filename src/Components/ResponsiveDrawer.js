@@ -684,7 +684,7 @@ const ResponsiveDrawer = ({ handleDrawerToggle, mobileOpen }) => {
           keepMounted: true,
         }}
         sx={{
-          display: { xs: "block", sm: "none" },
+          display: { xs: "block", md: "none" },
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
             width: drawerWidth,
@@ -698,7 +698,7 @@ const ResponsiveDrawer = ({ handleDrawerToggle, mobileOpen }) => {
       <StyledAppDrawer
         variant="permanent"
         sx={{
-          display: { xs: "none", sm: "block" },
+          display: { xs: "none", md: "block" },
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
             width: drawerWidth,

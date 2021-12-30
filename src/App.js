@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-
 import AuthContextProvider from "./Contexts/AuthContext";
 import ErrorContextProvider from "./Contexts/ErrorContext";
 import Routes from "./Helper/Routes";
@@ -17,12 +16,15 @@ const theme = createTheme({
     primary: {
       main: "#0000A7",
     },
+    secondary: {
+      main: "#97EA70",
+      contrastText: "#fff",
+    },
     text: {
       primary: "#002055",
     },
   },
 });
-
 
 function App() {
   return (
