@@ -3,6 +3,8 @@ import Drawer from "@mui/material/Drawer";
 
 export const StyledAppDrawer = styled(Drawer)`
   && {
+    width: 272px;
+
     #list-header {
       padding: 3rem 1rem;
     }
