@@ -7,26 +7,22 @@ import ListItemText from "@mui/material/ListItemText";
 import SvgIcon from "@mui/material/SvgIcon";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
+
 
 import logo_light from "../Assets/logo_light.svg";
 
 import { StyledAppDrawer } from "../Styles/AppDrawer.Styled";
 
-const ResponsiveDrawer = () => {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+const ResponsiveDrawer = ({ handleDrawerToggle, mobileOpen }) => {
   const [activeView, setActiveView] = React.useState(0);
   
   const drawerWidth = 272;
 
   const setView = (index) => {
     setActiveView(index);
+    handleDrawerToggle();
   };
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   const drawerItems = (
     <div>
@@ -679,20 +675,7 @@ const ResponsiveDrawer = () => {
 
   return (
     <div>
-    <Toolbar>
-          <IconButton
-            sx={{
-              color: 'primary.main'
-            }}
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-      
-        </Toolbar>
+    
       <StyledAppDrawer
         variant="temporary"
         open={mobileOpen}
