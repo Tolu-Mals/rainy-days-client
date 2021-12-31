@@ -3,6 +3,10 @@ import styled from 'styled-components';
 export const Layout = styled.div`
   && {
 
+    .space {
+        height: 1.5rem;
+    }
+
       .appbar {
           background: transparent;
           margin-right: auto;

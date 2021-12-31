@@ -62,7 +62,7 @@ const SignIn = () => {
         setIsLoading(false);
         auth_dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
         err_dispatch({ type: "CLEAR_ERRORS" });
-        history.push("/construction");
+        history.push("/dashboard");
       })
       .catch((err) => {
         setIsLoading(false);
@@ -80,7 +80,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if(auth_state.isAuthenticated){
-      history.push("/construction");
+      history.push("/dashboard");
     }
   }, [auth_state])
 

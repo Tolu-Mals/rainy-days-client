@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+
 import ResponsiveDrawer from "../Components/ResponsiveDrawer";
 
 import MenuIcon from "@mui/icons-material/Menu";
@@ -7,20 +9,33 @@ import IconButton from "@mui/material/IconButton";
 import AppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Badge from "@mui/material/Badge";
+// import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
 
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AccountCircle from "@mui/icons-material/AccountCircle";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
+import { deepPurple } from "@mui/material/colors";
 
+import { AuthContext } from "../Contexts/AuthContext";
 
 import { Layout } from "../Styles/Layout.styled";
 
+import styled from "styled-components";
+
+const Item = styled(Paper)`
+  height: 160px;
+  background-color: #7e7ee1;
+`;
+
 const Dashboard = () => {
+  const { auth_state } = useContext(AuthContext);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -88,80 +103,193 @@ const Dashboard = () => {
       open={n_isMenuOpen}
       onClose={handleNotificationsClose}
     >
-      <MenuItem onClick={handleMenuClose}>New Notification</MenuItem>
+      <MenuItem onClick={handleMenuClose}>No new notification</MenuItem>
     </Menu>
   );
 
   return (
-    <Layout>
-      <ResponsiveDrawer
-        handleDrawerToggle={handleDrawerToggle}
-        mobileOpen={mobileOpen}
-      />
-      <div className="mainApp">
-        <AppBar className="appbar" elevation={0}>
-          <Toolbar>
-            <IconButton
-              aria-label="open drawer"
-              edge="start"
-              size="large"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { md: "none" }, color: "#000" }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              variant="h6"
-              component="p"
-              sx={{ display: { xs: "none", md: "block" }, color: "#263959" }}
-            >
-              Hello, Tolulope
-            </Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button 
-              variant="contained" 
-              endIcon={<AddCircleOutlineIcon />}
-              disableElevation
-              color="secondary"
-              sx={{
-                marginRight: 2
-              }}
+    <>
+      <Layout>
+        <ResponsiveDrawer
+          handleDrawerToggle={handleDrawerToggle}
+          mobileOpen={mobileOpen}
+        />
+        <div className="mainApp">
+          <AppBar className="appbar" elevation={0} position="static" sx={{
+            display: { xs: 'block', md: 'none' }
+          }}>
+            <Toolbar>
+              <IconButton
+                aria-label="open drawer"
+                edge="start"
+                size="large"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2, display: { md: "none" }, color: "#000" }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography
+                variant="h6"
+                component="p"
+                sx={{ display: { xs: "none", md: "block" }, color: "#263959" }}
+              >
+                Hello, Tolulope
+              </Typography>
+              <Box sx={{ flexGrow: 1 }} />
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <Button
+                  variant="contained"
+                  endIcon={<AddCircleOutlineIcon />}
+                  disableElevation
+                  color="secondary"
+                  sx={{
+                    marginRight: 2,
+                  }}
+                >
+                  QUICK SAVE
+                </Button>
+              </Box>
+              <Box sx={{ display: { xs: "flex" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show new notifications"
+                  aria-controls={notificationsId}
+                  aria-haspopup="true"
+                  onClick={handleNotificationsOpen}
+                  color="inherit"
+                  sx={{
+                    width: 64,
+                    height: 64,
+                  }}
+                >
+                  {/* <Badge badgeContent={4} color="error">
+                  <NotificationsNoneOutlinedIcon />
+                </Badge> */}
+                  <NotificationsNoneOutlinedIcon />
+                </IconButton>
+
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                    {auth_state.user.email.slice(0, 1).toUpperCase()}
+                  </Avatar>
+                </IconButton>
+              </Box>
+            </Toolbar>
+            <Toolbar>
+              <Typography
+                variant="h6"
+                component="p"
+                sx={{ display: { xs: "block", md: "none" }, color: "#263959" }}
+              >
+                Hello, Tolulope
+              </Typography>
+              <Box sx={{ flexGrow: 1 }} />
+              <Button
+                variant="contained"
+                endIcon={<AddCircleOutlineIcon />}
+                disableElevation
+                color="secondary"
+                size="medium"
               >
                 QUICK SAVE
               </Button>
-            </Box>
-            <Box sx={{ display: { xs: "flex" } }}>
+            </Toolbar>
+          </AppBar>
+
+          <AppBar className="appbar" elevation={0} sx={{
+            display: { xs: 'none', md: 'block' }
+          }}>
+            <Toolbar>
               <IconButton
+                aria-label="open drawer"
+                edge="start"
                 size="large"
-                aria-label="show new notifications"
-                aria-controls={notificationsId}
-                aria-haspopup="true"
-                onClick={handleNotificationsOpen}
-                color="inherit"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2, display: { md: "none" }, color: "#000" }}
               >
-                <Badge badgeContent={4} color="error">
+                <MenuIcon />
+              </IconButton>
+              <Typography
+                variant="h6"
+                component="p"
+                sx={{ display: { xs: "none", md: "block" }, color: "#263959" }}
+              >
+                Hello, Tolulope
+              </Typography>
+              <Box sx={{ flexGrow: 1 }} />
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <Button
+                  variant="contained"
+                  endIcon={<AddCircleOutlineIcon />}
+                  disableElevation
+                  color="secondary"
+                  sx={{
+                    marginRight: 2,
+                  }}
+                >
+                  QUICK SAVE
+                </Button>
+              </Box>
+              <Box sx={{ display: { xs: "flex" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show new notifications"
+                  aria-controls={notificationsId}
+                  aria-haspopup="true"
+                  onClick={handleNotificationsOpen}
+                  color="inherit"
+                  sx={{
+                    width: 64,
+                    height: 64,
+                  }}
+                >
+                  {/* <Badge badgeContent={4} color="error">
                   <NotificationsNoneOutlinedIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        {renderProfileOptions}
-        {renderNotifications}
-      </div>
-    </Layout>
+                </Badge> */}
+                  <NotificationsNoneOutlinedIcon />
+                </IconButton>
+
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                    {auth_state.user.email.slice(0, 1).toUpperCase()}
+                  </Avatar>
+                </IconButton>
+              </Box>
+            </Toolbar>
+          </AppBar>
+
+          <Container>
+            <div className="space"></div>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={{ xs: 1, sm: 2, md: 4 }}
+            >
+              <Item>Item</Item>
+              <Item>Item</Item>
+              <Item>Item</Item>
+            </Stack>
+          </Container>
+          {renderProfileOptions}
+          {renderNotifications}
+        </div>
+      </Layout>
+    </>
   );
 };
 
