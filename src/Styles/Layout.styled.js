@@ -1,22 +1,34 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Layout = styled.div`
   && {
-
-    .space {
-        height: 1.5rem;
+    #stats {
+      justify-content: space-between;
     }
 
+    .space {
+      height: 2rem;
+    }
+
+    .appbar {
+      background: transparent;
+      margin-right: auto;
+      color: #000;
+    }
+
+    @media screen and (min-width: 900px) {
+      display: flex;
+
+      .mainApp {
+        width: calc(100% - 250px);
+      }
       .appbar {
-          background: transparent;
-          margin-right: auto;
-          color: #000;
+        width: calc(100% - 250px);
       }
 
-      @media screen and (min-width: 900px){
-          .appbar {
-              width: calc(100% - 272px);
-          }
+      .space {
+        height: 5rem;
       }
+    }
   }
 `;

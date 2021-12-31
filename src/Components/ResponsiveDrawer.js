@@ -20,7 +20,7 @@ const ResponsiveDrawer = ({ handleDrawerToggle, mobileOpen }) => {
   const [activeView, setActiveView] = React.useState(0);
   const { auth_state, auth_dispatch } = useContext(AuthContext);
 
-  const drawerWidth = 272;
+  const drawerWidth = 250;
 
   const setView = (index) => {
     setActiveView(index);

@@ -3,13 +3,13 @@ import Drawer from "@mui/material/Drawer";
 
 export const StyledAppDrawer = styled(Drawer)`
   && {
-    width: 272px;
+    width: 250px;
 
     #list-header {
       padding: 3rem 1rem;
     }
 
-    @media screen and (max-width: 597px) {
+    @media screen and (max-width: 900px) {
       #list-header img {
         width: 60%;
       }
