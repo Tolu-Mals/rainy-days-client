@@ -8,6 +8,8 @@ import AccountConfirmed from "../Pages/Auth/AccountConfirmed";
 import SiteConstruction from "../Pages/SiteConstruction";
 import Dashboard from "../Pages/Dashboard";
 import { AuthContext } from "../Contexts/AuthContext";
+import TargetSavings from "../Pages/TargetSavings";
+import DashboardHome from "../Pages/DashboardHome";
 
 const Routes = () => {
   const { auth_state } = useContext(AuthContext);
@@ -33,7 +35,6 @@ const Routes = () => {
       <Route path="/confirm">
         <AccountConfirmed />
       </Route>
-
     </Switch>
   );
 
@@ -43,7 +44,16 @@ const Routes = () => {
         <SiteConstruction />
       </Route>
       <Route path="/dashboard">
-        <Dashboard />
+        <Dashboard>
+          <Switch>
+            <Route path="/dashboard/target">
+              <TargetSavings />
+            </Route>
+            <Route exact path="/dashboard">
+              <DashboardHome />
+            </Route>
+          </Switch>
+        </Dashboard>
       </Route>
     </Switch>
   );

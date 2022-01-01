@@ -23,6 +23,7 @@ const theme = createTheme({
     text: {
       primary: "#002055",
     },
+    
   },
 });
 

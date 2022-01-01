@@ -15,7 +15,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
 
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -25,32 +24,15 @@ import { deepPurple } from "@mui/material/colors";
 import { AuthContext } from "../Contexts/AuthContext";
 
 import { Layout } from "../Styles/Layout.styled";
+import { Item } from "../Styles/Item.styled";
 
-import styled from "styled-components";
 
 import savings from "../Assets/savings_pattern.svg";
 import contributions from "../Assets/contribution_pattern.svg";
 
-const Item = styled(Paper)`
-  height: 100px;
-  display: flex;
-  /* align-items: top; */
-  padding: 1rem;
-  flex-direction: column;
 
-  .top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
 
-  @media screen and (min-width: 600px) {
-    width: 31%;
-  }
-`;
-
-const Dashboard = () => {
+const Dashboard = ({ children }) => {
   const { auth_state } = useContext(AuthContext);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -353,7 +335,8 @@ const Dashboard = () => {
                   color: "#fff",
                   backgroundImage: `url(${contributions})`,
                   backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'right bottom'
+                  backgroundPosition: 'right bottom',
+                  backgroundSize: 'cover'
                 }}
               >
                 <div className="top">
@@ -420,6 +403,7 @@ const Dashboard = () => {
                 </Typography>
               </Item>
             </Stack>
+            { children }
           </Container>
 
           {renderProfileOptions}

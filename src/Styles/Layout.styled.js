@@ -4,6 +4,7 @@ export const Layout = styled.div`
   && {
     #stats {
       justify-content: space-between;
+      margin-bottom: 2rem;
     }
 
     .space {
