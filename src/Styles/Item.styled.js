@@ -9,7 +9,7 @@ export const Item = styled(Paper)`
   flex-direction: column;
 
   .MuiButton-root {
-      width: 100px;
+      width: 150px;
       margin-top:  auto;
   }
 
