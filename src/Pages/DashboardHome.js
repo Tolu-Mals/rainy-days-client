@@ -7,6 +7,7 @@ import savings from "../Assets/savings_pattern.svg";
 import contributions from "../Assets/contribution_pattern.svg";
 import target from "../Assets/target.svg";
 import gift from "../Assets/gift.svg";
+import rotational from "../Assets/rotational.svg";
 
 import { Item } from "../Styles/Item.styled";
 
@@ -203,7 +204,7 @@ const DashboardHome = () => {
           sx={{
             backgroundColor: "#FDFEFF",
             color: "#002055",
-            backgroundImage: `url(${target})`,
+            backgroundImage: `url(${rotational})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right bottom",
             backgroundPositionY: "80%",

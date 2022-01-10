@@ -1,18 +1,12 @@
 import React from "react";
-import Typography from "@mui/material/Typography";
+import { BoxButtonList, BoxButton } from "../Styles/ButtonList.stlyed";
 
 const TargetSavings = () => {
   return (
     <div>
-      <Typography
-        variant="h5"
-        component="h1"
-        sx={{
-          color: "#3779DC",
-        }}
-      >
-        Target Savings
-      </Typography>
+      <BoxButtonList>
+        <BoxButton>Create new target savings</BoxButton>
+      </BoxButtonList>
     </div>
   );
 };

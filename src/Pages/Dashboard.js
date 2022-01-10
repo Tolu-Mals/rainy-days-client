@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useLocation } from "react-router-dom";
 
 import ResponsiveDrawer from "../Components/ResponsiveDrawer";
 
@@ -24,10 +25,6 @@ import { deepPurple } from "@mui/material/colors";
 import { AuthContext } from "../Contexts/AuthContext";
 
 import { Layout } from "../Styles/Layout.styled";
-import { Item } from "../Styles/Item.styled";
-
-
-
 
 
 
@@ -39,6 +36,22 @@ const Dashboard = ({ children }) => {
 
   const [n_anchorEl, n_setAnchorEl] = React.useState(null);
   const n_isMenuOpen = Boolean(n_anchorEl);
+
+  let location = useLocation();
+
+  const navTitle = () => {
+    switch(location.pathname){
+      case "/dashboard/":
+        return "Hello Tolulope";
+      case "/dashboard/contributions":
+          return "Contributions";
+      case "/dashboard/products":
+        return "Products";
+      default:
+        return ""
+    }
+  }
+
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -228,7 +241,7 @@ const Dashboard = ({ children }) => {
                 component="p"
                 sx={{ display: { xs: "none", md: "block" }, color: "#263959" }}
               >
-                Hello, Tolulope
+              { navTitle() }
               </Typography>
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
