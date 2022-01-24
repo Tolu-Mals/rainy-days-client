@@ -8,7 +8,7 @@ export const Layout = styled.div`
     }
 
     .space {
-      height: 2rem;
+      height: 1rem;
     }
 
     .appbar {

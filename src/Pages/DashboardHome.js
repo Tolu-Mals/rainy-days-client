@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -11,7 +11,11 @@ import rotational from "../Assets/rotational.svg";
 
 import { Item } from "../Styles/Item.styled";
 
+import { AuthContext } from "../Contexts/AuthContext";
+
 const DashboardHome = () => {
+  const { auth_state, auth_dispatch } = useContext(AuthContext);
+
   return (
     <div>
       <Stack direction={{ xs: "column", sm: "row" }} id="stats" spacing={2}>
@@ -137,6 +141,7 @@ const DashboardHome = () => {
           marginBottom: "1rem",
         }}
       >
+        {/* { auth_state.firstName ? 'Your Savings & Contributions': 'Complete your profile' } */}
         Your Savings & Contributions
       </Typography>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>

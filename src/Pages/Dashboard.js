@@ -41,12 +41,20 @@ const Dashboard = ({ children }) => {
 
   const navTitle = () => {
     switch(location.pathname){
-      case "/dashboard/":
+      case "/dashboard":
         return "Hello Tolulope";
+      case "/dashboard/":
+          return "Hello Tolulope";
       case "/dashboard/contributions":
           return "Contributions";
-      case "/dashboard/products":
-        return "Products";
+      case "/dashboard/products/target":
+        return "Target Savings";
+      case "/dashboard/products/target/new":
+        return "Target Savings";
+      case "/dashboard/products/rotational":
+          return "Rotational Savings";
+      case "/dashboard/products/loans":
+        return "Loans"
       default:
         return ""
     }
@@ -237,7 +245,7 @@ const Dashboard = ({ children }) => {
                 <MenuIcon />
               </IconButton>
               <Typography
-                variant="h6"
+                variant="h5"
                 component="p"
                 sx={{ display: { xs: "none", md: "block" }, color: "#263959" }}
               >

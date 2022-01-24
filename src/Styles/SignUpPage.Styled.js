@@ -38,4 +38,60 @@ export const SignUpContainer = styled(Grid)`
       }
     }
   }
+
+  &&#target-savings-container {
+    height: auto;
+
+   padding: 0;
+
+    #signup-title-mobile {
+      display: none;
+    }
+
+    #signup-title-desktop {
+      display: none;
+      margin-bottom: 1rem;
+      width: 80%;
+    }
+
+    .target-savings-lead-desktop {
+      font-size: 1.2rem;
+    }
+
+    .target-savings-lead-mobile {
+      font-size: 1rem;
+        @media screen and (min-width: 901px){
+        display: none;
+      }
+    }
+
+    @media screen and (min-width: 901px) {
+      padding: 0.5rem 0;
+      #target-savings-grid {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      #signup-form {
+        text-align: right;
+      }
+
+      #signup-title-desktop {
+        display: block;
+      }
+
+      .MuiButton-root {
+        max-width: 132px;
+      }
+    }
+
+    @media screen and (max-width: 900px) {
+      #signup-title-mobile {
+        display: block;
+        font-size: 1.6rem;
+        padding: 0rem;
+      }
+    }
+  }
 `;

@@ -1,52 +1,28 @@
 import React from "react";
+import { Switch, Route, useHistory } from "react-router-dom";
+
 import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { TabContainer } from "../Styles/Tabs.styled";
 import TargetSavings from "../Pages/TargetSavings";
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`,
-  };
-}
+import Loans from "../Pages/Loans";
 
 const Products = () => {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const history = useHistory();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
+const changeRoute = (route) => {
+  history.push(route);
+}
 
   return (
     <div>
@@ -58,29 +34,18 @@ const Products = () => {
               onChange={handleChange}
               indicatorColor="secondary"
               textColor="inherit"
-              // variant="fullWidth"
               aria-label="full width tabs example"
             >
-              <Tab label="Target Savings" {...a11yProps(0)} />
-              <Tab label="Loans" {...a11yProps(1)} />
-              <Tab label="Investments" {...a11yProps(2)} />
+              <Tab label="Target Savings" onClick={() => changeRoute("/dashboard/products/target")} />
+              <Tab label="Loans" onClick={() => changeRoute("/dashboard/products/loans")} />
+              <Tab label="Investments"  />
             </Tabs>
           </AppBar>
-          <SwipeableViews
-            axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-            index={value}
-            onChangeIndex={handleChangeIndex}
-          >
-            <TabPanel value={value} index={0} dir={theme.direction}>
+          <Switch>
+            <Route path="/dashboard/products/target">
               <TargetSavings />
-            </TabPanel>
-            <TabPanel value={value} index={1} dir={theme.direction}>
-              Item Two
-            </TabPanel>
-            <TabPanel value={value} index={2} dir={theme.direction}>
-              Item Three
-            </TabPanel>
-          </SwipeableViews>
+            </Route>
+          </Switch>
         </Box>
       </TabContainer>
     </div>

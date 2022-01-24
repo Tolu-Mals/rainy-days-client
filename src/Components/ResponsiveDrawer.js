@@ -19,7 +19,7 @@ const ResponsiveDrawer = ({ handleDrawerToggle, mobileOpen }) => {
   const history = useHistory();
   const [activeView, setActiveView] = React.useState(0);
   const { auth_state, auth_dispatch } = useContext(AuthContext);
-  const routes = ["", "contributions", "products"];
+  const routes = ["", "contributions", "products/target"];
 
   const drawerWidth = 250;
 
