@@ -1,7 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import styled from "styled-components";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Alert from "@mui/material/Alert";
+import LoadingButton from "@mui/lab/LoadingButton";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import MobileDatePicker from "@mui/lab/MobileDatePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import TextField from "@mui/material/TextField";
 
 import savings from "../Assets/savings_pattern.svg";
 import contributions from "../Assets/contribution_pattern.svg";
@@ -10,11 +22,64 @@ import gift from "../Assets/gift.svg";
 import rotational from "../Assets/rotational.svg";
 
 import { Item } from "../Styles/Item.styled";
+import { TaskList, Task } from "../Styles/TaskList.styled";
+import { FormContainer, StyledTextField } from "../Styles/FormContainer.styled";
+import { SignUpContainer } from "../Styles/SignUpPage.Styled";
 
 import { AuthContext } from "../Contexts/AuthContext";
+import { ErrorContext } from "../Contexts/ErrorContext";
+
+const StyledModal = styled(Modal)`
+  && {
+    .modal-box {
+      width: 95%;
+      max-width: 557px;
+      /* min-height: 90%; */
+    }
+
+    .top {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    #modal-title {
+      font-weight: 600;
+      font-size: 2rem;
+    }
+  }
+`;
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "#fff",
+  boxShadow: 18,
+  p: 2,
+  borderRadius: 3,
+};
 
 const DashboardHome = () => {
   const { auth_state, auth_dispatch } = useContext(AuthContext);
+  const { err_state, err_dispatch } = useContext(ErrorContext);
+
+  const [checked, setChecked] = React.useState([0]);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [dob, setDob] = React.useState(new Date("2014-08-18T21:11:54"));
+
+  const handleChange = (newValue) => {
+    setDob(newValue);
+  };
 
   return (
     <div>
@@ -141,125 +206,181 @@ const DashboardHome = () => {
           marginBottom: "1rem",
         }}
       >
-        {/* { auth_state.firstName ? 'Your Savings & Contributions': 'Complete your profile' } */}
-        Your Savings & Contributions
+        {auth_state.firstName
+          ? "Your Savings & Contributions"
+          : "Complete your profile"}
       </Typography>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <Item
-          rounded
-          elevation={0}
-          sx={{
-            backgroundColor: "#FDFEFF",
-            color: "#002055",
-            backgroundImage: `url(${target})`,
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "right bottom",
-            backgroundPositionY: "80%",
-            border: "1px solid #D2E3FF",
-            minHeight: 196,
-          }}
-        >
-          <div className="savings-count">
-            <Typography
-              variant="h2"
-              component="p"
+        {auth_state.firstName ? (
+          <>
+            <Item
+              rounded
+              elevation={0}
               sx={{
-                fontWeight: "bold",
-                marginRight: "0.7rem",
-              }}
-              color="#859CC2;"
-            >
-              0
-            </Typography>
-            <Typography
-              variant="h6"
-              component="p"
-              sx={{
-                fontWeight: 600,
+                backgroundColor: "#FDFEFF",
+                color: "#002055",
+                backgroundImage: `url(${target})`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "right bottom",
+                backgroundPositionY: "80%",
+                border: "1px solid #D2E3FF",
+                minHeight: 196,
               }}
             >
-              TARGET SAVINGS
-            </Typography>
-          </div>
-          <Typography
-            variant="body1"
-            component="p"
-            sx={{
-              fontWeight: 400,
-              color: "#808080",
-              marginBottom: "1rem",
-              width: "60%",
-            }}
-          >
-            Set a target and do what it takes to reach it
-          </Typography>
-          <Button
-            variant="contained"
-            disableElevation
-            fullWidth="false"
-            size="medium"
-          >
-            CREATE NOW
-          </Button>
-        </Item>
+              <div className="savings-count">
+                <Typography
+                  variant="h2"
+                  component="p"
+                  sx={{
+                    fontWeight: "bold",
+                    marginRight: "0.7rem",
+                  }}
+                  color="#859CC2;"
+                >
+                  0
+                </Typography>
+                <Typography
+                  variant="h6"
+                  component="p"
+                  sx={{
+                    fontWeight: 600,
+                  }}
+                >
+                  TARGET SAVINGS
+                </Typography>
+              </div>
+              <Typography
+                variant="body1"
+                component="p"
+                sx={{
+                  fontWeight: 400,
+                  color: "#808080",
+                  marginBottom: "1rem",
+                  width: "60%",
+                }}
+              >
+                Set a target and do what it takes to reach it
+              </Typography>
+              <Button
+                variant="contained"
+                disableElevation
+                fullWidth="false"
+                size="medium"
+              >
+                CREATE NOW
+              </Button>
+            </Item>
 
-        <Item
-          rounded
-          elevation={0}
-          sx={{
-            backgroundColor: "#FDFEFF",
-            color: "#002055",
-            backgroundImage: `url(${rotational})`,
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "right bottom",
-            backgroundPositionY: "80%",
-            border: "1px solid #D2E3FF",
-            minHeight: 196,
-          }}
-        >
-          <div className="savings-count">
-            <Typography
-              variant="h2"
-              component="p"
+            <Item
+              rounded
+              elevation={0}
               sx={{
-                fontWeight: "bold",
-                marginRight: "0.7rem",
-              }}
-              color="#859CC2;"
-            >
-              0
-            </Typography>
-            <Typography
-              variant="h6"
-              component="p"
-              sx={{
-                fontWeight: 600,
+                backgroundColor: "#FDFEFF",
+                color: "#002055",
+                backgroundImage: `url(${rotational})`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "right bottom",
+                backgroundPositionY: "80%",
+                border: "1px solid #D2E3FF",
+                minHeight: 196,
               }}
             >
-              ROTATIONAL SAVINGS
-            </Typography>
-          </div>
-          <Typography
-            variant="body1"
-            component="p"
-            sx={{
-              fontWeight: 400,
-              color: "#808080",
-              marginBottom: "1rem",
-              width: "60%",
-            }}
-          >
-            Join a group and save towards a timed goal
-          </Typography>
-          <Button
-            variant="contained"
-            disableElevation
-            fullWidth="false"
-            size="medium"
-          >
-            CREATE NOW
-          </Button>
-        </Item>
+              <div className="savings-count">
+                <Typography
+                  variant="h2"
+                  component="p"
+                  sx={{
+                    fontWeight: "bold",
+                    marginRight: "0.7rem",
+                  }}
+                  color="#859CC2;"
+                >
+                  0
+                </Typography>
+                <Typography
+                  variant="h6"
+                  component="p"
+                  sx={{
+                    fontWeight: 600,
+                  }}
+                >
+                  ROTATIONAL SAVINGS
+                </Typography>
+              </div>
+              <Typography
+                variant="body1"
+                component="p"
+                sx={{
+                  fontWeight: 400,
+                  color: "#808080",
+                  marginBottom: "1rem",
+                  width: "60%",
+                }}
+              >
+                Join a group and save towards a timed goal
+              </Typography>
+              <Button
+                variant="contained"
+                disableElevation
+                fullWidth="false"
+                size="medium"
+              >
+                CREATE NOW
+              </Button>
+            </Item>
+          </>
+        ) : (
+          <TaskList orientation="vertical" id="task-list">
+            <Task onClick={handleOpen} size="large">
+              <div className="task-tag">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
+                </svg>
+                <div className="description">We want to know you better</div>
+              </div>
+
+              <div className="action">COMPLETE NOW</div>
+            </Task>
+            <Task onClick={handleOpen} size="large">
+              <div className="task-tag">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
+                </svg>
+                <div className="description">Kindly add your card details</div>
+              </div>
+
+              <div className="action">COMPLETE NOW</div>
+            </Task>
+            <Task onClick={handleOpen} size="large">
+              <div className="task-tag">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
+                </svg>
+                <div className="description">Set your transaction pin</div>
+              </div>
+
+              <div className="action">COMPLETE NOW</div>
+            </Task>
+          </TaskList>
+        )}
         <Item
           rounded
           elevation={0}
@@ -281,7 +402,7 @@ const DashboardHome = () => {
               fontWeight: 600,
               marginBottom: "1rem",
               width: "60%",
-              fontSize: 24
+              fontSize: 24,
             }}
           >
             There is more for you when you refer
@@ -303,6 +424,153 @@ const DashboardHome = () => {
           </Button>
         </Item>
       </Stack>
+      <StyledModal open={open} onClose={handleClose}>
+        <Box sx={modalStyle} className="modal-box">
+          <div className="top">
+            <IconButton aria-label="close" onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </div>
+
+          <Typography id="modal-title" sx={{ mb: 2 }}>
+            Let's get to know more about you
+          </Typography>
+
+          <SignUpContainer container id="target-savings-container">
+            <FormContainer item xs={12} md={12} id="target-savings-grid">
+              <form id="signup-form user-information"  l>
+                {error && (
+                  <Alert
+                    severity="error"
+                    sx={{
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    {error}
+                  </Alert>
+                )}
+
+                {err_state.msg && (
+                  <Alert
+                    severity="error"
+                    sx={{
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    {err_state.msg}
+                  </Alert>
+                )}
+
+                <StyledTextField
+                  required
+                  fullWidth
+                  id="first-name"
+                  placeholder="First Name"
+                  onChange={(e) => setFirstName(e.target.value)}
+                  value={firstName}
+                  variant="outlined"
+                  className="input"
+                />
+
+                <StyledTextField
+                  required
+                  fullWidth
+                  id="last-name"
+                  placeholder="Last Name"
+                  onChange={(e) => setLastName(e.target.value)}
+                  value={lastName}
+                  variant="outlined"
+                  className="input"
+                />
+
+                <StyledTextField
+                  required
+                  fullWidth
+                  id="phone-number"
+                  placeholder="Phone Number"
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  value={phoneNumber}
+                  type="tel"
+                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  variant="outlined"
+                  className="input"
+                />
+
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Stack
+                    spacing={3}
+                    sx={{
+                      display: { xs: "none", md: "block" },
+                    }}
+                  >
+                    <DesktopDatePicker
+                      label="Date of birth"
+                      inputFormat="MM/dd/yyyy"
+                      value={dob}
+                      onChange={handleChange}
+                      renderInput={(params) => <TextField {...params} />}
+                      sx={{
+                        display: { xs: "none", md: "block" },
+                      }}
+                    />
+                  </Stack>
+                </LocalizationProvider>
+
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Stack
+                    spacing={3}
+                    sx={{
+                      display: { xs: "flex", md: "none" },
+                    }}
+                  >
+                    <MobileDatePicker
+                      label="Date of birth"
+                      inputFormat="MM/dd/yyyy"
+                      value={dob}
+                      onChange={setDob}
+                      renderInput={(params) => <TextField {...params} />}
+                      sx={{
+                        width: "100%",
+                      }}
+                    />
+                  </Stack>
+                </LocalizationProvider>
+
+                {isLoading ? (
+                  <LoadingButton
+                    variant="contained"
+                    fullWidth
+                    disableElevation
+                    loading
+                    color="primary"
+                    size="large"
+                    sx={{
+                      marginBottom: "1rem",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    NEXT
+                  </LoadingButton>
+                ) : (
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    disableElevation
+                    color="primary"
+                    size="large"
+                    sx={{
+                      marginBottom: "1rem",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    NEXT
+                  </Button>
+                )}
+              </form>
+            </FormContainer>
+          </SignUpContainer>
+        </Box>
+      </StyledModal>
     </div>
   );
 };

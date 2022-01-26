@@ -16,6 +16,12 @@ export const FormContainer = styled(Grid)`
       height: 100%;
       justify-content: center;
     }
+
+    #user-informationn .MuiFormControl-root {
+      @media screen and (min-width: 600px){
+        width: 100%;
+      }
+    }
     
     @media screen and (max-width: 900px) {
       text-align: center;
@@ -30,7 +36,6 @@ export const FormContainer = styled(Grid)`
 
     .MuiFormControl-root{
       width: 100%;
-      
     }
 
     .MuiOutlinedInput-root {
