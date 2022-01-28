@@ -29,6 +29,9 @@ import { SignUpContainer } from "../Styles/SignUpPage.Styled";
 import { AuthContext } from "../Contexts/AuthContext";
 import { ErrorContext } from "../Contexts/ErrorContext";
 
+import { tokenConfig } from "../Helper/tokenConfig";
+import axios from "axios";
+
 const StyledModal = styled(Modal)`
   && {
     .modal-box {
@@ -64,21 +67,118 @@ const DashboardHome = () => {
   const { auth_state, auth_dispatch } = useContext(AuthContext);
   const { err_state, err_dispatch } = useContext(ErrorContext);
 
-  const [checked, setChecked] = React.useState([0]);
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [isUserInfoModalOpen, setIsUserInfoModalOpen] = React.useState(false);
+  const [isBankDetailsModalOpen, setIsBankDetailsModalOpen] =
+    React.useState(false);
+  const [isTransactionPinModalOpen, setIsTransactionPinModalOpen] =
+    React.useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [dob, setDob] = React.useState(new Date("2014-08-18T21:11:54"));
 
-  const handleChange = (newValue) => {
-    setDob(newValue);
+  const [accountNumber, setAccountNumber] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [bvn, setBvn] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [transactionPin, setTransactionPin] = useState("");
+  const [transactionPinConfirmation, setTransactionPinConfirmation] =
+    useState("");
+
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleUserInfoSave = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if (!firstName || !lastName || !phoneNumber || !dob) {
+      setIsLoading(false);
+      return setError("Please enter all fields");
+    }
+
+    const currDate = new Date();
+
+    if (dob > currDate) {
+      setIsLoading(false);
+      return setError("Date of birth cannot be in the future");
+    }
+
+    const data = {
+      id: auth_state.user.id,
+      first_name: firstName,
+      last_name: lastName,
+      phone_number: phoneNumber,
+      dob: dob,
+    };
+
+    saveUserInfo(data);
+  };
+
+  const saveUserInfo = ({ id, first_name, last_name, phone_number, dob }) => {
+    const body = JSON.stringify({
+      id,
+      first_name,
+      last_name,
+      phone_number,
+      dob,
+    });
+
+    axios
+      .post(
+        "https://rainy-days-savers.herokuapp.com/api/onboard/user-info",
+        body,
+        tokenConfig(auth_state)
+      )
+      .then((res) => {
+        setIsLoading(false);
+        auth_dispatch({ type: "ONBOARD_SUCCESS", payload: res.data });
+        err_dispatch({ type: "CLEAR_ERRORS" });
+        handleClose("user-info-modal");
+      }).catch(err => {
+        err_dispatch({
+          type: "GET_ERRORS",
+          payload: {
+            msg: err?.response?.data?.msg,
+            status: err?.response?.status,
+            id: "ONBOARD_FAIL",
+          },
+        });
+      })
+  };
+
+  const handleOpen = (id) => {
+    switch (id) {
+      case "user-info-modal":
+        setIsUserInfoModalOpen(true);
+        break;
+      case "bank-details-modal":
+        setIsBankDetailsModalOpen(true);
+        break;
+      case "transaction-pin-modal":
+        setIsTransactionPinModalOpen(true);
+        break;
+      default:
+        return;
+    }
+  };
+
+  const handleClose = (id) => {
+    switch (id) {
+      case "user-info-modal":
+        setIsUserInfoModalOpen(false);
+        break;
+      case "bank-details-modal":
+        setIsBankDetailsModalOpen(false);
+        break;
+      case "transaction-pin-modal":
+        setIsTransactionPinModalOpen(false);
+        break;
+      default:
+        return;
+    }
   };
 
   return (
@@ -206,12 +306,16 @@ const DashboardHome = () => {
           marginBottom: "1rem",
         }}
       >
-        {auth_state.firstName
+        {auth_state.user.first_name
           ? "Your Savings & Contributions"
           : "Complete your profile"}
       </Typography>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        {auth_state.firstName ? (
+        {auth_state.user.isLastNameSaved &&
+        auth_state.user.isFirstNameSaved &&
+        auth_state.user.isDobSaved &&
+        auth_state.user.isBankInfoSaved &&
+        auth_state.user.isTransactionPinSet ? (
           <>
             <Item
               rounded
@@ -331,54 +435,70 @@ const DashboardHome = () => {
           </>
         ) : (
           <TaskList orientation="vertical" id="task-list">
-            <Task onClick={handleOpen} size="large">
-              <div className="task-tag">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
-                </svg>
-                <div className="description">We want to know you better</div>
-              </div>
+            {auth_state.user.isFirstNameSaved ? null : (
+              <Task onClick={() => handleOpen("user-info-modal")} size="large">
+                <div className="task-tag">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
+                  </svg>
+                  <div className="description">We want to know you better</div>
+                </div>
 
-              <div className="action">COMPLETE NOW</div>
-            </Task>
-            <Task onClick={handleOpen} size="large">
-              <div className="task-tag">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
-                </svg>
-                <div className="description">Kindly add your card details</div>
-              </div>
+                <div className="action">COMPLETE NOW</div>
+              </Task>
+            )}
 
-              <div className="action">COMPLETE NOW</div>
-            </Task>
-            <Task onClick={handleOpen} size="large">
-              <div className="task-tag">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
-                </svg>
-                <div className="description">Set your transaction pin</div>
-              </div>
+            {auth_state.user.isBankInfoSaved ? null : (
+              <Task
+                onClick={() => handleOpen("bank-details-modal")}
+                size="large"
+              >
+                <div className="task-tag">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
+                  </svg>
+                  <div className="description">
+                    Kindly add your bank details
+                  </div>
+                </div>
 
-              <div className="action">COMPLETE NOW</div>
-            </Task>
+                <div className="action">COMPLETE NOW</div>
+              </Task>
+            )}
+
+            {auth_state.user.isTransactionPinSet ? null : (
+              <Task
+                onClick={() => handleOpen("transaction-pin-modal")}
+                size="large"
+              >
+                <div className="task-tag">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
+                  </svg>
+                  <div className="description">Set your transaction pin</div>
+                </div>
+
+                <div className="action">COMPLETE NOW</div>
+              </Task>
+            )}
           </TaskList>
         )}
         <Item
@@ -424,10 +544,17 @@ const DashboardHome = () => {
           </Button>
         </Item>
       </Stack>
-      <StyledModal open={open} onClose={handleClose}>
+      <StyledModal
+        open={isUserInfoModalOpen}
+        onClose={() => handleClose("user-info-modal")}
+        id="user-info-modal"
+      >
         <Box sx={modalStyle} className="modal-box">
           <div className="top">
-            <IconButton aria-label="close" onClick={handleClose}>
+            <IconButton
+              aria-label="close"
+              onClick={() => handleClose("user-info-modal")}
+            >
               <CloseIcon />
             </IconButton>
           </div>
@@ -438,7 +565,7 @@ const DashboardHome = () => {
 
           <SignUpContainer container id="target-savings-container">
             <FormContainer item xs={12} md={12} id="target-savings-grid">
-              <form id="signup-form user-information"  l>
+              <form id="signup-form user-information" l>
                 {error && (
                   <Alert
                     severity="error"
@@ -507,7 +634,7 @@ const DashboardHome = () => {
                       label="Date of birth"
                       inputFormat="MM/dd/yyyy"
                       value={dob}
-                      onChange={handleChange}
+                      onChange={setDob}
                       renderInput={(params) => <TextField {...params} />}
                       sx={{
                         display: { xs: "none", md: "block" },
@@ -535,6 +662,237 @@ const DashboardHome = () => {
                     />
                   </Stack>
                 </LocalizationProvider>
+
+                {isLoading ? (
+                  <LoadingButton
+                    variant="contained"
+                    fullWidth
+                    disableElevation
+                    loading
+                    color="primary"
+                    size="large"
+                    sx={{
+                      marginBottom: "1rem",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    NEXT
+                  </LoadingButton>
+                ) : (
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    disableElevation
+                    color="primary"
+                    size="large"
+                    sx={{
+                      marginBottom: "1rem",
+                      marginTop: "1rem",
+                    }}
+                    onClick={(e) => handleUserInfoSave(e)}
+                  >
+                    SAVE
+                  </Button>
+                )}
+              </form>
+            </FormContainer>
+          </SignUpContainer>
+        </Box>
+      </StyledModal>
+
+      <StyledModal
+        open={isBankDetailsModalOpen}
+        onClose={() => handleClose("bank-details-modal")}
+        id="bank-details-modal"
+      >
+        <Box sx={modalStyle} className="modal-box">
+          <div className="top">
+            <IconButton
+              aria-label="close"
+              onClick={() => handleClose("bank-details-modal")}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
+
+          <Typography id="modal-title" sx={{ mb: 2 }}>
+            Let's get your bank details
+          </Typography>
+
+          <SignUpContainer container id="target-savings-container">
+            <FormContainer item xs={12} md={12} id="target-savings-grid">
+              <form id="signup-form user-information" l>
+                {error && (
+                  <Alert
+                    severity="error"
+                    sx={{
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    {error}
+                  </Alert>
+                )}
+
+                {err_state.msg && (
+                  <Alert
+                    severity="error"
+                    sx={{
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    {err_state.msg}
+                  </Alert>
+                )}
+
+                <StyledTextField
+                  required
+                  fullWidth
+                  id="account-number"
+                  placeholder="Account Number"
+                  onChange={(e) => setAccountNumber(e.target.value)}
+                  value={accountNumber}
+                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  variant="outlined"
+                  className="input"
+                />
+
+                <StyledTextField
+                  required
+                  fullWidth
+                  id="account-name"
+                  placeholder="Account Name"
+                  onChange={(e) => setAccountName(e.target.value)}
+                  value={accountName}
+                  variant="outlined"
+                  className="input"
+                />
+
+                <StyledTextField
+                  required
+                  fullWidth
+                  id="bvn"
+                  placeholder="BVN"
+                  onChange={(e) => setBvn(e.target.value)}
+                  value={bvn}
+                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                  variant="outlined"
+                  className="input"
+                />
+
+                {isLoading ? (
+                  <LoadingButton
+                    variant="contained"
+                    fullWidth
+                    disableElevation
+                    loading
+                    color="primary"
+                    size="large"
+                    sx={{
+                      marginBottom: "1rem",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    NEXT
+                  </LoadingButton>
+                ) : (
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    disableElevation
+                    color="primary"
+                    size="large"
+                    sx={{
+                      marginBottom: "1rem",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    NEXT
+                  </Button>
+                )}
+              </form>
+            </FormContainer>
+          </SignUpContainer>
+        </Box>
+      </StyledModal>
+
+      <StyledModal
+        open={isTransactionPinModalOpen}
+        onClose={() => handleClose("transaction-pin-modal")}
+        id="transaction-pin-modal"
+      >
+        <Box sx={modalStyle} className="modal-box">
+          <div className="top">
+            <IconButton
+              aria-label="close"
+              onClick={() => handleClose("transaction-pin-modal")}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
+
+          <Typography id="modal-title" sx={{ mb: 2 }}>
+            Let's set your transaction pin
+          </Typography>
+
+          <SignUpContainer container id="target-savings-container">
+            <FormContainer item xs={12} md={12} id="target-savings-grid">
+              <form id="signup-form user-information" l>
+                {error && (
+                  <Alert
+                    severity="error"
+                    sx={{
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    {error}
+                  </Alert>
+                )}
+
+                {err_state.msg && (
+                  <Alert
+                    severity="error"
+                    sx={{
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    {err_state.msg}
+                  </Alert>
+                )}
+
+                <StyledTextField
+                  required
+                  fullWidth
+                  id="password"
+                  placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  variant="outlined"
+                  className="input"
+                />
+
+                <StyledTextField
+                  required
+                  fullWidth
+                  id="transaction-pin"
+                  placeholder="Transaction Pin"
+                  onChange={(e) => setTransactionPin(e.target.value)}
+                  value={transactionPin}
+                  variant="outlined"
+                  className="input"
+                />
+
+                <StyledTextField
+                  required
+                  fullWidth
+                  id="transaction-pin-confirmation"
+                  placeholder="Confirm Transaction Pin"
+                  onChange={(e) =>
+                    setTransactionPinConfirmation(e.target.value)
+                  }
+                  value={transactionPinConfirmation}
+                  variant="outlined"
+                  className="input"
+                />
 
                 {isLoading ? (
                   <LoadingButton

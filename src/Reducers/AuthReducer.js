@@ -36,7 +36,11 @@ export const AuthReducer = (state, action) => {
         isAuthenticated: false,
         isLoading: false,
       };
-
+  case "ONBOARD_SUCCESS":
+      return {
+        ...state,
+        user: action.payload
+      }
     default:
       return state;
   }

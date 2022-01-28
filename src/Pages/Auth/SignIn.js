@@ -32,6 +32,7 @@ const SignIn = () => {
 
   const handleSignIn = (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!email || !password) {
       setIsLoading(false);
@@ -47,7 +48,6 @@ const SignIn = () => {
   };
 
   const loginUser = ({ email, password }) => {
-    setIsLoading(true);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -57,6 +57,7 @@ const SignIn = () => {
     const body = JSON.stringify({ email, password });
 
     axios
+      // .post("http://localhost:5000/api/auth", body, config)
       .post("https://rainy-days-savers.herokuapp.com/api/auth", body, config)
       .then((res) => {
         setIsLoading(false);
