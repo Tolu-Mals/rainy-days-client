@@ -4,11 +4,16 @@ import TextField from "@mui/material/TextField";
 
 export const FormContainer = styled(Grid)`
   && {
-
     text-align: left;
     align-items: center;
     justify-content: center;
     width: 80%;
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
 
     .title-group {
       display: flex;
@@ -18,11 +23,11 @@ export const FormContainer = styled(Grid)`
     }
 
     #user-informationn .MuiFormControl-root {
-      @media screen and (min-width: 600px){
+      @media screen and (min-width: 600px) {
         width: 100%;
       }
     }
-    
+
     @media screen and (max-width: 900px) {
       text-align: center;
 
@@ -34,7 +39,7 @@ export const FormContainer = styled(Grid)`
       }
     }
 
-    .MuiFormControl-root{
+    .MuiFormControl-root {
       width: 100%;
     }
 

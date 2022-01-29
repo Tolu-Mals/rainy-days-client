@@ -1,15 +1,15 @@
 import React from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 
-import SwipeableViews from "react-swipeable-views";
+// import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { TabContainer } from "../Styles/Tabs.styled";
-import TargetSavings from "../Pages/TargetSavings";
-import Loans from "../Pages/Loans";
+import TargetSavings from "./TargetSavings/TargetSavings";
+// import Loans from "../Pages/Loans";
 
 const Products = () => {
   const theme = useTheme();

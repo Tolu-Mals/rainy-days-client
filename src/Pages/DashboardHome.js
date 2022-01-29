@@ -306,7 +306,11 @@ const DashboardHome = () => {
           marginBottom: "1rem",
         }}
       >
-        {auth_state.user.first_name
+        {(auth_state.user.isLastNameSaved &&
+        auth_state.user.isFirstNameSaved &&
+        auth_state.user.isDobSaved &&
+        auth_state.user.isBankInfoSaved &&
+        auth_state.user.isTransactionPinSet)
           ? "Your Savings & Contributions"
           : "Complete your profile"}
       </Typography>
@@ -754,6 +758,7 @@ const DashboardHome = () => {
                   inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                   variant="outlined"
                   className="input"
+                  type="number"
                 />
 
                 <StyledTextField
@@ -777,6 +782,7 @@ const DashboardHome = () => {
                   inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                   variant="outlined"
                   className="input"
+                  type="number"
                 />
 
                 {isLoading ? (

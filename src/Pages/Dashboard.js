@@ -42,14 +42,16 @@ const Dashboard = ({ children }) => {
   const navTitle = () => {
     switch(location.pathname){
       case "/dashboard":
-        return "Hello Tolulope";
+        return auth_state.user.first_name ? `Hello ${auth_state.user.first_name}`:"Hello User";
       case "/dashboard/":
-          return "Hello Tolulope";
+          return auth_state.user.first_name ? `Hello ${auth_state.user.first_name}`:"Hello User";
       case "/dashboard/contributions":
           return "Contributions";
       case "/dashboard/products/target":
         return "Target Savings";
       case "/dashboard/products/target/new":
+        return "Target Savings";
+      case "/dashboard/products/target/summary":
         return "Target Savings";
       case "/dashboard/products/rotational":
           return "Rotational Savings";
@@ -156,7 +158,7 @@ const Dashboard = ({ children }) => {
                 component="p"
                 sx={{ display: { xs: "none", md: "block" }, color: "#263959" }}
               >
-                Hello, Tolulope
+                {auth_state.user.first_name ? `Hello ${auth_state.user.first_name}`:"Hello User"}
               </Typography>
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
@@ -212,7 +214,7 @@ const Dashboard = ({ children }) => {
                 component="p"
                 sx={{ display: { xs: "block", md: "none" }, color: "#263959" }}
               >
-                Hello, Tolulope
+                {auth_state.user.first_name ? `Hello ${auth_state.user.first_name}`:"Hello User"}
               </Typography>
               <Box sx={{ flexGrow: 1 }} />
               <Button
