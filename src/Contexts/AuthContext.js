@@ -33,7 +33,16 @@ const AuthContextProvider = (props) => {
           // }})
           // auth_dispatch({ type: 'AUTH_ERROR' })
       })
+
+    // axios.get("https://api.paystack.co/bank", {
+    //   headers: {
+    //     Authorization: 'Bearer sk_test_0bca28ad7ed05560a59153669857742b4f06699f'
+    //   }
+    // }).then((result) => console.log(result.data))
+    // .catch(err => console.log(err))
   }, []);
+
+
 
   return (
     <AuthContext.Provider value={{ auth_state, auth_dispatch }}>

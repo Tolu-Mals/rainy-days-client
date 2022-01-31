@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -90,6 +90,8 @@ const DashboardHome = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const [banks, setBanks] = useState([]);
+
   const handleUserInfoSave = (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -180,6 +182,22 @@ const DashboardHome = () => {
         return;
     }
   };
+
+  useEffect(() => {
+    const options = {
+      port: 443,
+      headers: {
+        Authorization: 'Bearer sk_test_0bca28ad7ed05560a59153669857742b4f06699f'
+      }
+    }
+    axios.get("https://api.paystack.co/bank", options)
+    .then((response) => {
+      setBanks(response.data);
+    }).catch(err => {
+      setError(err.message);
+      console.log(err);
+    })
+  }, [])
 
   return (
     <div>
