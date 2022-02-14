@@ -4,9 +4,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import AuthContextProvider from "./Contexts/AuthContext";
 import ErrorContextProvider from "./Contexts/ErrorContext";
-import Routes from "./Helper/Routes";
+import UserContextProvider from "./Contexts/UserContext";
 
-import { BrowserRouter as Router } from "react-router-dom";
+import Routes from "./Helper/Routes";
 
 const theme = createTheme({
   typography: {
@@ -23,7 +23,6 @@ const theme = createTheme({
     text: {
       primary: "#002055",
     },
-    
   },
 });
 
@@ -32,10 +31,12 @@ function App() {
     <div className="App">
       <ErrorContextProvider>
         <AuthContextProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Routes />
-          </ThemeProvider>
+          <UserContextProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Routes />
+            </ThemeProvider>
+          </UserContextProvider>
         </AuthContextProvider>
       </ErrorContextProvider>
     </div>

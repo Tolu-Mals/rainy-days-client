@@ -23,6 +23,8 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { deepPurple } from "@mui/material/colors";
 
 import { AuthContext } from "../Contexts/AuthContext";
+import { UserContext } from "../Contexts/UserContext";
+
 
 import { Layout } from "../Styles/Layout.styled";
 
@@ -30,6 +32,7 @@ import { Layout } from "../Styles/Layout.styled";
 
 const Dashboard = ({ children }) => {
   const { auth_state } = useContext(AuthContext);
+  const { user_state } = useContext(UserContext)
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -42,9 +45,9 @@ const Dashboard = ({ children }) => {
   const navTitle = () => {
     switch(location.pathname){
       case "/dashboard":
-        return auth_state.user.first_name ? `Hello ${auth_state.user.first_name}`:"Hello User";
+        return user_state.first_name ? `Hello ${user_state.first_name}`:"Hello User";
       case "/dashboard/":
-          return auth_state.user.first_name ? `Hello ${auth_state.user.first_name}`:"Hello User";
+          return user_state.first_name ? `Hello ${user_state.first_name}`:"Hello User";
       case "/dashboard/contributions":
           return "Contributions";
       case "/dashboard/products/target":
@@ -158,7 +161,7 @@ const Dashboard = ({ children }) => {
                 component="p"
                 sx={{ display: { xs: "none", md: "block" }, color: "#263959" }}
               >
-                {auth_state.user.first_name ? `Hello ${auth_state.user.first_name}`:"Hello User"}
+                {user_state.first_name ? `Hello ${user_state.first_name}`:"Hello User"}
               </Typography>
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
@@ -214,7 +217,7 @@ const Dashboard = ({ children }) => {
                 component="p"
                 sx={{ display: { xs: "block", md: "none" }, color: "#263959" }}
               >
-                {auth_state.user.first_name ? `Hello ${auth_state.user.first_name}`:"Hello User"}
+                {user_state.first_name ? `Hello ${user_state.first_name}`:"Hello User"}
               </Typography>
               <Box sx={{ flexGrow: 1 }} />
               <Button

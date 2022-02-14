@@ -9,11 +9,12 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 import LoadingButton from "@mui/lab/LoadingButton";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import MobileDatePicker from "@mui/lab/MobileDatePicker";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
+// import LocalizationProvider from "@mui/lab/LocalizationProvider";
+// import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+// import MobileDatePicker from "@mui/lab/MobileDatePicker";
+// import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
 import savings from "../Assets/savings_pattern.svg";
 import contributions from "../Assets/contribution_pattern.svg";
@@ -28,6 +29,7 @@ import { SignUpContainer } from "../Styles/SignUpPage.Styled";
 
 import { AuthContext } from "../Contexts/AuthContext";
 import { ErrorContext } from "../Contexts/ErrorContext";
+import { UserContext } from "../Contexts/UserContext";
 
 import { tokenConfig } from "../Helper/tokenConfig";
 import axios from "axios";
@@ -66,6 +68,7 @@ const modalStyle = {
 const DashboardHome = () => {
   const { auth_state, auth_dispatch } = useContext(AuthContext);
   const { err_state, err_dispatch } = useContext(ErrorContext);
+  const { user_state, user_dispatch } = useContext(UserContext);
 
   const [isUserInfoModalOpen, setIsUserInfoModalOpen] = React.useState(false);
   const [isBankDetailsModalOpen, setIsBankDetailsModalOpen] =
@@ -76,7 +79,6 @@ const DashboardHome = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [dob, setDob] = React.useState(new Date("2014-08-18T21:11:54"));
 
   const [accountNumber, setAccountNumber] = useState("");
   const [accountName, setAccountName] = useState("");
@@ -86,6 +88,7 @@ const DashboardHome = () => {
   const [transactionPin, setTransactionPin] = useState("");
   const [transactionPinConfirmation, setTransactionPinConfirmation] =
     useState("");
+  const [bankCode, setBankCode] = useState("");
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -96,59 +99,123 @@ const DashboardHome = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    if (!firstName || !lastName || !phoneNumber || !dob) {
+    if (!firstName || !lastName || !phoneNumber) {
       setIsLoading(false);
       return setError("Please enter all fields");
     }
 
-    const currDate = new Date();
-
-    if (dob > currDate) {
-      setIsLoading(false);
-      return setError("Date of birth cannot be in the future");
-    }
-
     const data = {
-      id: auth_state.user.id,
+      email: auth_state.user.email,
       first_name: firstName,
       last_name: lastName,
       phone_number: phoneNumber,
-      dob: dob,
     };
 
     saveUserInfo(data);
   };
 
-  const saveUserInfo = ({ id, first_name, last_name, phone_number, dob }) => {
+  const saveUserInfo = ({ email, first_name, last_name, phone_number }) => {
     const body = JSON.stringify({
-      id,
+      email,
       first_name,
       last_name,
       phone_number,
-      dob,
     });
 
     axios
       .post(
-        "https://rainy-days-savers.herokuapp.com/api/onboard/user-info",
+        "http://localhost:5000/api/onboard/user-info",
         body,
         tokenConfig(auth_state)
       )
       .then((res) => {
         setIsLoading(false);
-        auth_dispatch({ type: "ONBOARD_SUCCESS", payload: res.data });
+        user_dispatch({ type: "USER_INFO_SAVED", payload: res.data });
         err_dispatch({ type: "CLEAR_ERRORS" });
         handleClose("user-info-modal");
-      }).catch(err => {
+      })
+      .catch((err) => {
         err_dispatch({
           type: "GET_ERRORS",
           payload: {
             msg: err?.response?.data?.msg,
             status: err?.response?.status,
-            id: "ONBOARD_FAIL",
+            id: "USER_INFO_SAVE_FAIL",
           },
         });
+      });
+
+  };
+
+  const handleBankDetailsSave = (e) => {
+    e.preventDefault();
+
+    if (!accountNumber || !accountName || !bvn || !bankCode) {
+      setError("Please fill all fields");
+    }
+
+    if (bvn.length !== 11) {
+      setError("YOur BVN should have 11 digits");
+     }
+
+    const bankDetails = {
+      account_number: accountNumber,
+      account_name: accountName,
+      bank_code: bankCode,
+      bvn: bvn,
+    };
+
+    saveBankDetails(bankDetails);
+  };
+
+  const saveBankDetails = (bankDetails) => {
+    validateBankDetails(bankDetails);
+  };
+
+  const validateBankDetails = ({
+    account_number,
+    account_name,
+    bank_code,
+    bvn,
+  }) => {
+    const config = {
+      port: 443,
+      headers: {
+        Authorization:
+          "Bearer sk_test_0bca28ad7ed05560a59153669857742b4f06699f",
+        "Content-Type": "application/json",
+      },
+    };
+
+    const body = JSON.stringify({
+      account_number,
+      account_name,
+      bank_code,
+      bvn,
+    });
+
+    axios
+      .post(
+        "https://api.paystack.co/customer/{customer_code}/identification",
+        {
+          country: "NG",
+          type: "bank_account",
+          account_number: "0111111111",
+          bvn: "222222222221",
+          bank_code: "007",
+          first_name: "Uchenna",
+          last_name: "Okoro",
+        },
+        config
+      )
+      .then((result) => {
+        console.log("Request processing at paystack...");
+        handleClose("bank-details-modal");
       })
+      .catch((err) => {
+        console.log(err.message);
+        setError(err.message);
+      });
   };
 
   const handleOpen = (id) => {
@@ -187,17 +254,20 @@ const DashboardHome = () => {
     const options = {
       port: 443,
       headers: {
-        Authorization: 'Bearer sk_test_0bca28ad7ed05560a59153669857742b4f06699f'
-      }
-    }
-    axios.get("https://api.paystack.co/bank", options)
-    .then((response) => {
-      setBanks(response.data);
-    }).catch(err => {
-      setError(err.message);
-      console.log(err);
-    })
-  }, [])
+        Authorization:
+          "Bearer pk_test_315fe98d33daaa7656216e841f9822893cb316b2",
+      },
+    };
+    axios
+      .get("https://api.paystack.co/bank", options)
+      .then((response) => {
+        setBanks(response.data.data);
+      })
+      .catch((err) => {
+        setError(err.message);
+        console.log(err);
+      });
+  }, []);
 
   return (
     <div>
@@ -324,20 +394,10 @@ const DashboardHome = () => {
           marginBottom: "1rem",
         }}
       >
-        {(auth_state.user.isLastNameSaved &&
-        auth_state.user.isFirstNameSaved &&
-        auth_state.user.isDobSaved &&
-        auth_state.user.isBankInfoSaved &&
-        auth_state.user.isTransactionPinSet)
-          ? "Your Savings & Contributions"
-          : "Complete your profile"}
+        {false ? "Your Savings & Contributions" : "Complete your profile"}
       </Typography>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        {auth_state.user.isLastNameSaved &&
-        auth_state.user.isFirstNameSaved &&
-        auth_state.user.isDobSaved &&
-        auth_state.user.isBankInfoSaved &&
-        auth_state.user.isTransactionPinSet ? (
+        {false ? (
           <>
             <Item
               rounded
@@ -457,7 +517,7 @@ const DashboardHome = () => {
           </>
         ) : (
           <TaskList orientation="vertical" id="task-list">
-            {auth_state.user.isFirstNameSaved ? null : (
+            { user_state.first_name ? null : (
               <Task onClick={() => handleOpen("user-info-modal")} size="large">
                 <div className="task-tag">
                   <svg
@@ -644,7 +704,7 @@ const DashboardHome = () => {
                   variant="outlined"
                   className="input"
                 />
-
+                {/* 
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <Stack
                     spacing={3}
@@ -663,9 +723,9 @@ const DashboardHome = () => {
                       }}
                     />
                   </Stack>
-                </LocalizationProvider>
+                </LocalizationProvider> */}
 
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <Stack
                     spacing={3}
                     sx={{
@@ -683,7 +743,7 @@ const DashboardHome = () => {
                       }}
                     />
                   </Stack>
-                </LocalizationProvider>
+                </LocalizationProvider> */}
 
                 {isLoading ? (
                   <LoadingButton
@@ -743,7 +803,7 @@ const DashboardHome = () => {
 
           <SignUpContainer container id="target-savings-container">
             <FormContainer item xs={12} md={12} id="target-savings-grid">
-              <form id="signup-form user-information" l>
+              <form id="signup-form user-information">
                 {error && (
                   <Alert
                     severity="error"
@@ -791,6 +851,28 @@ const DashboardHome = () => {
                 />
 
                 <StyledTextField
+                  id="bank-name"
+                  select
+                  label="Bank"
+                  value={bankCode}
+                  onChange={(e) => setBankCode(e.target.value)}
+                  variant="outlined"
+                  fullWidth
+                  className="input"
+                  sx={{
+                    textAlign: "left",
+                  }}
+                >
+                  {banks.map((bank) => {
+                    return (
+                      <MenuItem key={bank.id} value={bank.code}>
+                        {bank.name}
+                      </MenuItem>
+                    );
+                  })}
+                </StyledTextField>
+
+                <StyledTextField
                   required
                   fullWidth
                   id="bvn"
@@ -829,6 +911,7 @@ const DashboardHome = () => {
                       marginBottom: "1rem",
                       marginTop: "1rem",
                     }}
+                    onClick={(e) => handleBankDetailsSave(e)}
                   >
                     NEXT
                   </Button>
