@@ -189,7 +189,7 @@ const SignIn = () => {
                 Forgot Password
               </Link>
               <p>
-                New here? <Link to="/signup">Sign Up</Link>
+                New here? <Link to="/signup" onClick={() => err_dispatch({ type: "CLEAR_ERRORS"})}>Sign Up</Link>
               </p>
             </div>
           </form>

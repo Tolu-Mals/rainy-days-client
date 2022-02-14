@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Typography from "@mui/material/Typography";
@@ -7,7 +7,10 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Alert from "@mui/material/Alert";
 
 import { StyledBrand, BrandPattern } from "../../Styles/Brand.styled";
-import { FormContainer, StyledTextField } from "../../Styles/FormContainer.styled";
+import {
+  FormContainer,
+  StyledTextField,
+} from "../../Styles/FormContainer.styled";
 import { SignUpContainer } from "../../Styles/SignUpPage.Styled";
 
 import { ErrorContext } from "../../Contexts/ErrorContext";
@@ -71,21 +74,20 @@ const SignUp = () => {
     axios
       .post("https://rainy-days-savers.herokuapp.com/api/users", body, config)
       .then((res) => {
-        // err_dispatch({ type: "CLEAR_ERRORS" });
+        setIsLoading(false);
+        setIsMailSent(true);
         setError("");
         setEmail("");
         setPassword("");
         setConfirmedPassword("");
-        setIsLoading(false);
-        setIsMailSent(true);
       })
       .catch((err) => {
         auth_dispatch({ type: "REGISTER_FAIL" });
         err_dispatch({
           type: "GET_ERRORS",
           payload: {
-            msg: err.response.data.msg,
-            status: err.response.status,
+            msg: err?.response?.data?.msg,
+            status: err?.response?.status,
             id: "PASSWORD_RESET_FAIL",
           },
         });
