@@ -19,12 +19,10 @@ const AuthContextProvider = (props) => {
   const { err_dispatch } = useContext(ErrorContext);
 
 
- 
   useEffect(() => {
     auth_dispatch({ type: "USER_LOADING" });
     axios
       .get("https://rainy-days-savers.herokuapp.com/api/auth/user", tokenConfig(auth_state))
-      // .get("http:localhost:5000/api/auth/user", tokenConfig(auth_state))
       .then((res) => auth_dispatch({ type: "USER_LOADED", payload: res.data }))
       .catch(err => {
           // err_dispatch({ type: 'GET_ERRORS', payload: {
