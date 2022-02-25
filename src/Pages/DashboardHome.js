@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 import LoadingButton from "@mui/lab/LoadingButton";
+import CircularProgress from "@mui/material/CircularProgress";
 // import LocalizationProvider from "@mui/lab/LocalizationProvider";
 // import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 // import MobileDatePicker from "@mui/lab/MobileDatePicker";
@@ -124,7 +125,7 @@ const DashboardHome = () => {
 
     axios
       .post(
-        "http://localhost:5000/api/onboard/user-info",
+        "https://rainy-days-savers.herokuapp.com/api/onboard/user-info",
         body,
         tokenConfig(auth_state)
       )
@@ -144,7 +145,6 @@ const DashboardHome = () => {
           },
         });
       });
-
   };
 
   const handleBankDetailsSave = (e) => {
@@ -156,9 +156,10 @@ const DashboardHome = () => {
 
     if (bvn.length !== 11) {
       setError("YOur BVN should have 11 digits");
-     }
+    }
 
     const bankDetails = {
+      customer_code: user_state.customer_code,
       account_number: accountNumber,
       account_name: accountName,
       bank_code: bankCode,
@@ -168,54 +169,20 @@ const DashboardHome = () => {
     saveBankDetails(bankDetails);
   };
 
-  const saveBankDetails = (bankDetails) => {
-    validateBankDetails(bankDetails);
-  };
-
-  const validateBankDetails = ({
+  const saveBankDetails = ({
+    customer_code,
     account_number,
     account_name,
     bank_code,
     bvn,
   }) => {
-    const config = {
-      port: 443,
-      headers: {
-        Authorization:
-          "Bearer sk_test_0bca28ad7ed05560a59153669857742b4f06699f",
-        "Content-Type": "application/json",
-      },
-    };
-
     const body = JSON.stringify({
+      customer_code,
       account_number,
       account_name,
       bank_code,
       bvn,
     });
-
-    axios
-      .post(
-        "https://api.paystack.co/customer/{customer_code}/identification",
-        {
-          country: "NG",
-          type: "bank_account",
-          account_number: "0111111111",
-          bvn: "222222222221",
-          bank_code: "007",
-          first_name: "Uchenna",
-          last_name: "Okoro",
-        },
-        config
-      )
-      .then((result) => {
-        console.log("Request processing at paystack...");
-        handleClose("bank-details-modal");
-      })
-      .catch((err) => {
-        console.log(err.message);
-        setError(err.message);
-      });
   };
 
   const handleOpen = (id) => {
@@ -387,245 +354,271 @@ const DashboardHome = () => {
           </Typography>
         </Item>
       </Stack>
-      <Typography
-        variant="h6"
-        component="h2"
-        sx={{
-          marginBottom: "1rem",
-        }}
-      >
-        {false ? "Your Savings & Contributions" : "Complete your profile"}
-      </Typography>
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        {false ? (
-          <>
-            <Item
-              rounded
-              elevation={0}
-              sx={{
-                backgroundColor: "#FDFEFF",
-                color: "#002055",
-                backgroundImage: `url(${target})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right bottom",
-                backgroundPositionY: "80%",
-                border: "1px solid #D2E3FF",
-                minHeight: 196,
-              }}
-            >
-              <div className="savings-count">
-                <Typography
-                  variant="h2"
-                  component="p"
-                  sx={{
-                    fontWeight: "bold",
-                    marginRight: "0.7rem",
-                  }}
-                  color="#859CC2;"
-                >
-                  0
-                </Typography>
-                <Typography
-                  variant="h6"
-                  component="p"
-                  sx={{
-                    fontWeight: 600,
-                  }}
-                >
-                  TARGET SAVINGS
-                </Typography>
-              </div>
-              <Typography
-                variant="body1"
-                component="p"
-                sx={{
-                  fontWeight: 400,
-                  color: "#808080",
-                  marginBottom: "1rem",
-                  width: "60%",
-                }}
-              >
-                Set a target and do what it takes to reach it
-              </Typography>
-              <Button
-                variant="contained"
-                disableElevation
-                fullWidth="false"
-                size="medium"
-              >
-                CREATE NOW
-              </Button>
-            </Item>
 
-            <Item
-              rounded
-              elevation={0}
-              sx={{
-                backgroundColor: "#FDFEFF",
-                color: "#002055",
-                backgroundImage: `url(${rotational})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right bottom",
-                backgroundPositionY: "80%",
-                border: "1px solid #D2E3FF",
-                minHeight: 196,
-              }}
-            >
-              <div className="savings-count">
-                <Typography
-                  variant="h2"
-                  component="p"
-                  sx={{
-                    fontWeight: "bold",
-                    marginRight: "0.7rem",
-                  }}
-                  color="#859CC2;"
-                >
-                  0
-                </Typography>
-                <Typography
-                  variant="h6"
-                  component="p"
-                  sx={{
-                    fontWeight: 600,
-                  }}
-                >
-                  ROTATIONAL SAVINGS
-                </Typography>
-              </div>
-              <Typography
-                variant="body1"
-                component="p"
-                sx={{
-                  fontWeight: 400,
-                  color: "#808080",
-                  marginBottom: "1rem",
-                  width: "60%",
-                }}
-              >
-                Join a group and save towards a timed goal
-              </Typography>
-              <Button
-                variant="contained"
-                disableElevation
-                fullWidth="false"
-                size="medium"
-              >
-                CREATE NOW
-              </Button>
-            </Item>
-          </>
-        ) : (
-          <TaskList orientation="vertical" id="task-list">
-            { user_state.first_name ? null : (
-              <Task onClick={() => handleOpen("user-info-modal")} size="large">
-                <div className="task-tag">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
-                  </svg>
-                  <div className="description">We want to know you better</div>
-                </div>
+      {/* Check if User has loaded before we check conditions, if not loaded yet we display loader */}
 
-                <div className="action">COMPLETE NOW</div>
-              </Task>
-            )}
-
-            {auth_state.user.isBankInfoSaved ? null : (
-              <Task
-                onClick={() => handleOpen("bank-details-modal")}
-                size="large"
-              >
-                <div className="task-tag">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
-                  </svg>
-                  <div className="description">
-                    Kindly add your bank details
-                  </div>
-                </div>
-
-                <div className="action">COMPLETE NOW</div>
-              </Task>
-            )}
-
-            {auth_state.user.isTransactionPinSet ? null : (
-              <Task
-                onClick={() => handleOpen("transaction-pin-modal")}
-                size="large"
-              >
-                <div className="task-tag">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
-                  </svg>
-                  <div className="description">Set your transaction pin</div>
-                </div>
-
-                <div className="action">COMPLETE NOW</div>
-              </Task>
-            )}
-          </TaskList>
-        )}
-        <Item
-          rounded
-          elevation={0}
+      {user_state.user_loading ? (
+        <Box
           sx={{
-            backgroundColor: "#FFF5DC",
-            color: "#263959",
-            backgroundImage: `url(${gift})`,
-            backgroundRepeat: "no-repeat",
-            backgroundPositionX: "100%",
-            backgroundPositionY: "80%",
-            border: "1px solid #D2E3FF",
-            minHeight: 196,
-            border: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
+          <CircularProgress color="primary" />
+        </Box>
+      ) : (
+        <>
           <Typography
-            component="p"
+            variant="h6"
+            component="h2"
             sx={{
-              fontWeight: 600,
               marginBottom: "1rem",
-              width: "60%",
-              fontSize: 24,
             }}
           >
-            There is more for you when you refer
+            {false ? "Your Savings & Contributions" : "Complete your profile"}
           </Typography>
-          <Button
-            variant="contained"
-            disableElevation
-            // fullWidth="false"
-            size="medium"
-            sx={{
-              color: "#263959",
-              backgroundColor: "#fff",
-              "&:hover": {
-                backgroundColor: "#efefef",
-              },
-            }}
-          >
-            REFER NOW
-          </Button>
-        </Item>
-      </Stack>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            {false ? (
+              <>
+                <Item
+                  rounded
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#FDFEFF",
+                    color: "#002055",
+                    backgroundImage: `url(${target})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right bottom",
+                    backgroundPositionY: "80%",
+                    border: "1px solid #D2E3FF",
+                    minHeight: 196,
+                  }}
+                >
+                  <div className="savings-count">
+                    <Typography
+                      variant="h2"
+                      component="p"
+                      sx={{
+                        fontWeight: "bold",
+                        marginRight: "0.7rem",
+                      }}
+                      x
+                      color="#859CC2;"
+                    >
+                      0
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      component="p"
+                      sx={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      TARGET SAVINGS
+                    </Typography>
+                  </div>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    sx={{
+                      fontWeight: 400,
+                      color: "#808080",
+                      marginBottom: "1rem",
+                      width: "60%",
+                    }}
+                  >
+                    Set a target and do what it takes to reach it
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    disableElevation
+                    fullWidth="false"
+                    size="medium"
+                  >
+                    CREATE NOW
+                  </Button>
+                </Item>
+
+                <Item
+                  rounded
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#FDFEFF",
+                    color: "#002055",
+                    backgroundImage: `url(${rotational})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right bottom",
+                    backgroundPositionY: "80%",
+                    border: "1px solid #D2E3FF",
+                    minHeight: 196,
+                  }}
+                >
+                  <div className="savings-count">
+                    <Typography
+                      variant="h2"
+                      component="p"
+                      sx={{
+                        fontWeight: "bold",
+                        marginRight: "0.7rem",
+                      }}
+                      color="#859CC2;"
+                    >
+                      0
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      component="p"
+                      sx={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      ROTATIONAL SAVINGS
+                    </Typography>
+                  </div>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    sx={{
+                      fontWeight: 400,
+                      color: "#808080",
+                      marginBottom: "1rem",
+                      width: "60%",
+                    }}
+                  >
+                    Join a group and save towards a timed goal
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    disableElevation
+                    fullWidth="false"
+                    size="medium"
+                  >
+                    CREATE NOW
+                  </Button>
+                </Item>
+              </>
+            ) : (
+              <TaskList orientation="vertical" id="task-list">
+                {user_state.first_name ? null : (
+                  <Task
+                    onClick={() => handleOpen("user-info-modal")}
+                    size="large"
+                  >
+                    <div className="task-tag">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
+                      </svg>
+                      <div className="description">
+                        We want to know you better
+                      </div>
+                    </div>
+
+                    <div className="action">COMPLETE NOW</div>
+                  </Task>
+                )}
+
+                {auth_state.user.isBankInfoSaved ? null : (
+                  <Task
+                    onClick={() => handleOpen("bank-details-modal")}
+                    size="large"
+                  >
+                    <div className="task-tag">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
+                      </svg>
+                      <div className="description">
+                        Kindly add your bank details
+                      </div>
+                    </div>
+
+                    <div className="action">COMPLETE NOW</div>
+                  </Task>
+                )}
+
+                {auth_state.user.isTransactionPinSet ? null : (
+                  <Task
+                    onClick={() => handleOpen("transaction-pin-modal")}
+                    size="large"
+                  >
+                    <div className="task-tag">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle cx="9" cy="9" r="8.5" stroke="#FF2171" />
+                      </svg>
+                      <div className="description">
+                        Set your transaction pin
+                      </div>
+                    </div>
+
+                    <div className="action">COMPLETE NOW</div>
+                  </Task>
+                )}
+              </TaskList>
+            )}
+            <Item
+              rounded
+              elevation={0}
+              sx={{
+                backgroundColor: "#FFF5DC",
+                color: "#263959",
+                backgroundImage: `url(${gift})`,
+                backgroundRepeat: "no-repeat",
+                backgroundPositionX: "100%",
+                backgroundPositionY: "80%",
+                border: "1px solid #D2E3FF",
+                minHeight: 196,
+                border: "none",
+              }}
+            >
+              <Typography
+                component="p"
+                sx={{
+                  fontWeight: 600,
+                  marginBottom: "1rem",
+                  width: "60%",
+                  fontSize: 24,
+                }}
+              >
+                There is more for you when you refer
+              </Typography>
+              <Button
+                variant="contained"
+                disableElevation
+                // fullWidth="false"
+                size="medium"
+                sx={{
+                  color: "#263959",
+                  backgroundColor: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#efefef",
+                  },
+                }}
+              >
+                REFER NOW
+              </Button>
+            </Item>
+          </Stack>
+        </>
+      )}
+
       <StyledModal
         open={isUserInfoModalOpen}
         onClose={() => handleClose("user-info-modal")}
