@@ -14,7 +14,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 // import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 // import MobileDatePicker from "@mui/lab/MobileDatePicker";
 // import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import TextField from "@mui/material/TextField";
+// import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
 import savings from "../Assets/savings_pattern.svg";
@@ -67,7 +67,7 @@ const modalStyle = {
 };
 
 const DashboardHome = () => {
-  const { auth_state, auth_dispatch } = useContext(AuthContext);
+  const { auth_state } = useContext(AuthContext);
   const { err_state, err_dispatch } = useContext(ErrorContext);
   const { user_state, user_dispatch } = useContext(UserContext);
 
@@ -176,6 +176,7 @@ const DashboardHome = () => {
     bank_code,
     bvn,
   }) => {
+  
     const body = JSON.stringify({
       customer_code,
       account_number,
@@ -183,6 +184,8 @@ const DashboardHome = () => {
       bank_code,
       bvn,
     });
+
+    
   };
 
   const handleOpen = (id) => {
